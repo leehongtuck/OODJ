@@ -1,0 +1,6 @@
+CustomerID||Name||NRIC||Address||Phone
+C001||Hong Tock||980818||Puchong||012345
+C001||Hong Tock||980818||Puchong||012345
+C002||Neo Tock||980818||Puchong||012345
+C003||Neo Tock||980818||Puchong||012345
+C004||Neo Tock||980818||Puchong||012345

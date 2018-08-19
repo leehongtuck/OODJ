@@ -1,0 +1,6 @@
+UserID||Username||Password||PositionID
+U001||tuckus||abcd||C001
+U002||tuckus||abcd||C001
+U003||tuus||abcd||C002
+U004||tuus||abcd||C003
+U005||tuus||abcd||C004

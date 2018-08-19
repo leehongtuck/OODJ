@@ -1,0 +1,3 @@
+ProductId||Name||Price||Type||Quantity
+P001||Rice Cooker||120||F||10
+P002||Laptop||340||N||10

@@ -5,17 +5,67 @@
  */
 package View.Customer;
 
+import Model.Cart;
+import Model.FragileProduct;
+import Model.Inventory;
+import Model.NonFragileProduct;
+import Model.OrderItem;
+import Model.Product;
+import Model.ProductInventoryLoader;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class ProductCatalogView extends javax.swing.JFrame {
-
+    DefaultTableModel model;
+    Cart cart;
     /**
      * Creates new form ProductCatalogView
      */
-    public ProductCatalogView() {
+    public ProductCatalogView() {   
         initComponents();
+        loadTable();
+    }
+    
+    public ProductCatalogView(Cart cart){
+        this();
+        this.cart = cart;    
+    }
+    
+    private void loadTable(){
+        model = new javax.swing.table.DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+                
+        ProductInventoryLoader p = new ProductInventoryLoader();
+        ArrayList<Inventory> inventoryArrayList = p.load();
+        model.addColumn("Product ID");
+        model.addColumn("Product");
+        model.addColumn("Price (RM)");
+        model.addColumn("Type");
+        model.addColumn("Stock"); 
+        for(int i = 0; i < inventoryArrayList.size(); i++){
+            String productId = inventoryArrayList.get(i).getProduct().getProductId();
+            String productName = inventoryArrayList.get(i).getProduct().getProductName();
+            String price = Double.toString(inventoryArrayList.get(i).getProduct().getPrice());
+            String type = "";
+            if(inventoryArrayList.get(i).getProduct().toString().equals("N")){
+                type = "Non-Fragile";
+            }else if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
+                type = "Fragile";
+            }
+            String quantity = Integer.toString(inventoryArrayList.get(i).getQuantity());
+            Object[] data = {productId, productName, price, type, quantity};
+            model.addRow(data);
+        }
+        tblProduct.setModel(model);
     }
 
     /**
@@ -28,34 +78,55 @@ public class ProductCatalogView extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        btnAddToCart = new javax.swing.JButton();
+        btnViewCart = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tblProduct = new javax.swing.JTable();
+        btnMenu = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Product Catalog");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        btnAddToCart.setText("Add To Cart");
+        btnAddToCart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddToCartActionPerformed(evt);
+            }
+        });
+
+        btnViewCart.setText("View Cart");
+        btnViewCart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewCartActionPerformed(evt);
+            }
+        });
+
+        tblProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ProductId", "Name", "Price", "Type", "Quantity"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
-        jButton1.setText("Add To Cart");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblProduct);
 
-        jButton2.setText("View Cart");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnMenu.setText("Menu");
+        btnMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnMenuActionPerformed(evt);
             }
         });
 
@@ -63,19 +134,24 @@ public class ProductCatalogView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(392, 392, 392))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
-                .addContainerGap())
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(159, 159, 159)
+                                .addComponent(btnMenu))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnAddToCart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnViewCart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(236, 236, 236)
+                        .addComponent(jLabel1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,20 +159,112 @@ public class ProductCatalogView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAddToCart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnViewCart)
+                        .addGap(153, 153, 153)
+                        .addComponent(btnMenu)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnViewCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewCartActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if(cart != null){
+            this.dispose();
+            CartView form = new CartView(cart);
+            form.setVisible(true);
+        }else{
+            this.dispose();
+            CartView form = new CartView();
+            form.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_btnViewCartActionPerformed
+
+    private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        MenuView form = new MenuView();
+        form.setVisible(true);
+    }//GEN-LAST:event_btnMenuActionPerformed
+
+    private void btnAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToCartActionPerformed
+        // TODO add your handling code here:
+        
+        if(tblProduct.getSelectedRow()== -1){
+            JOptionPane.showMessageDialog(this, "Please select a product!");
+            return;
+        }
+        
+        String strQuantity = JOptionPane.showInputDialog(this, "Quantity:");
+        if(strQuantity != null){
+            int quantity;
+            try{
+                quantity = Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            }
+            
+            //Get selected row's product data
+            int rowSelect = tblProduct.getSelectedRow();
+            String productId = (String)model.getValueAt(rowSelect, 0);
+            String productName = (String)model.getValueAt(rowSelect, 1);
+            Double price = Double.parseDouble((String)model.getValueAt(rowSelect, 2));
+            String type = (String)model.getValueAt(rowSelect, 3);
+            int stock = Integer.parseInt((String)model.getValueAt(rowSelect, 4));
+            
+            //Check stock amount
+            if(quantity > stock){
+                JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                return;
+            }
+            
+            Product p;
+            if(type.equals("Non-Fragile")){
+                p = new NonFragileProduct(productId, productName, price);
+            }else if(type.equals("Fragile")){
+                p = new FragileProduct(productId, productName, price);
+            }else{
+                JOptionPane.showMessageDialog(this, "An unexpected error occured. Please retry.");
+                return;
+            }
+       
+            OrderItem o = new OrderItem(p, quantity);
+            
+            if(cart == null){
+                cart = new Cart();
+                cart.add(o);
+            }else{
+                for(int i = 0; i <cart.getCartItems().size(); i++){
+                    if(cart.getCartItems().get(i).getProduct().getProductId().equals(p.getProductId())){
+                        JOptionPane.showMessageDialog(this, "This item exists in cart. "
+                                + "Please proceed to the cart to change the quantity or remove.");
+                        return;
+                    }else{
+                        System.out.println(cart.getCartItems().get(i).getProduct());
+                    }
+                }
+                cart.add(o);
+            }
+            
+            this.dispose();
+            CartView form = new CartView(cart);
+            form.setVisible(true);
+        }
+        
+    }//GEN-LAST:event_btnAddToCartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -134,10 +302,11 @@ public class ProductCatalogView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAddToCart;
+    private javax.swing.JButton btnMenu;
+    private javax.swing.JButton btnViewCart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblProduct;
     // End of variables declaration//GEN-END:variables
 }

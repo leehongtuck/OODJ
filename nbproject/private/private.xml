@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/Login.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/Customer.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/LoginView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Admin/EditCustomerView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/Admin.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/ProductInventoryManager.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Admin/ManageCustomerView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Admin/AddCustomerView.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Main.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/NonFragileProduct.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/Product.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Customer/CartView.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Customer/ProductCatalogView.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/OrderItem.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/Cart.java</file>
         </group>
     </open-files>
 </project-private>

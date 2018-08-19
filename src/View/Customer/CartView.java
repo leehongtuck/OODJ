@@ -5,17 +5,72 @@
  */
 package View.Customer;
 
+import Model.Cart;
+import Model.OrderItem;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class CartView extends javax.swing.JFrame {
-
+    DefaultTableModel model;
+    Cart cart;
     /**
      * Creates new form CartView
      */
     public CartView() {
         initComponents();
+        loadTable();
+    }
+    
+    public CartView(Cart cart){
+        this.cart = cart;
+        initComponents();
+        loadTable();
+    }
+    
+    private void loadTable(){
+        model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        model.addColumn("Product ID");
+        model.addColumn("Product");
+        model.addColumn("Price (RM)");
+        model.addColumn("Type");
+        model.addColumn("Quantity");
+        
+        if(cart != null){
+            ArrayList<OrderItem> cartItems = cart.getCartItems();
+            
+            for(int i = 0; i < cartItems.size(); i++){
+                String productId = cartItems.get(i).getProduct().getProductId();
+                String productName = cartItems.get(i).getProduct().getProductName();
+                String price = Double.toString(cartItems.get(i).getProduct().getPrice());
+                String type = "";
+                if(cartItems.get(i).getProduct().toString().equals("N")){
+                    type = "Non-Fragile";
+                }else if(cartItems.get(i).getProduct().toString().equals("F")){
+                    type = "Fragile";
+                }
+                String quantity = Integer.toString(cartItems.get(i).getQuantity());
+                Object[] data = {productId, productName, price, type, quantity};
+                model.addRow(data);
+            }
+            
+        }else{
+            JOptionPane.showMessageDialog(this, "The cart is empty.");
+            btnRemove.setEnabled(false);
+            btnEditQuantity.setEnabled(false);
+            btnCheckout.setEnabled(false);           
+        }
+        tblCart.setModel(model);
+        
     }
 
     /**
@@ -29,11 +84,13 @@ public class CartView extends javax.swing.JFrame {
 
         jDialog1 = new javax.swing.JDialog();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCart = new javax.swing.JTable();
         btnRemove = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnEditQuantity = new javax.swing.JButton();
+        btnCheckout = new javax.swing.JButton();
         lblTitle = new javax.swing.JLabel();
+        btnProductCatalog = new javax.swing.JButton();
+        btnMainMenu = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -48,7 +105,7 @@ public class CartView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -59,20 +116,29 @@ public class CartView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblCart);
 
         btnRemove.setText("Remove ");
 
-        jButton1.setText("Edit Quantity");
+        btnEditQuantity.setText("Edit Quantity");
 
-        jButton2.setText("Checkout");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnCheckout.setText("Checkout");
+        btnCheckout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnCheckoutActionPerformed(evt);
             }
         });
 
         lblTitle.setText("Cart");
+
+        btnProductCatalog.setText("Product Catalog");
+        btnProductCatalog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductCatalogActionPerformed(evt);
+            }
+        });
+
+        btnMainMenu.setText("Main Menu");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,18 +148,24 @@ public class CartView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnRemove)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)
-                                .addGap(99, 99, 99)
-                                .addComponent(jButton2))
+                                .addGap(31, 31, 31)
+                                .addComponent(btnEditQuantity)
+                                .addGap(29, 29, 29)
+                                .addComponent(btnCheckout)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
+                                .addComponent(btnProductCatalog))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(257, 257, 257)
-                        .addComponent(lblTitle)))
-                .addContainerGap(61, Short.MAX_VALUE))
+                        .addComponent(lblTitle)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,17 +177,32 @@ public class CartView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRemove)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(btnEditQuantity)
+                    .addComponent(btnCheckout)
+                    .addComponent(btnProductCatalog))
+                .addGap(18, 18, 18)
+                .addComponent(btnMainMenu)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnCheckoutActionPerformed
+
+    private void btnProductCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductCatalogActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        if(cart != null){
+            ProductCatalogView form = new ProductCatalogView(cart);
+            form.setVisible(true);
+        }else{
+            ProductCatalogView form = new ProductCatalogView();
+            form.setVisible(true);
+        }
+    }//GEN-LAST:event_btnProductCatalogActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,12 +240,14 @@ public class CartView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCheckout;
+    private javax.swing.JButton btnEditQuantity;
+    private javax.swing.JButton btnMainMenu;
+    private javax.swing.JButton btnProductCatalog;
     private javax.swing.JButton btnRemove;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblCart;
     // End of variables declaration//GEN-END:variables
 }

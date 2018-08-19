@@ -39,9 +39,7 @@ public class Login {
                     } else {
                         System.out.println("no position");
                     }
-                } else {
-                    System.out.println("wrong username or pw");
-                }
+                } 
 
             }
         } catch (FileNotFoundException e) {

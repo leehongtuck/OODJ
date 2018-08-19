@@ -5,6 +5,12 @@
  */
 package View;
 
+import Model.Admin;
+import Model.Login;
+import Model.User;
+import javax.swing.JOptionPane;
+
+
 /**
  *
  * @author ht-19
@@ -112,6 +118,26 @@ public class LoginView extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
+        String username = txtUsername.getText();
+        String password = new String(txtPassword.getPassword());
+        Login login = new Login(username, password);
+        User user = login.verify();
+        JOptionPane.showMessageDialog(this, user);
+        if(user.toString().equals("Customer")){
+            this.dispose();
+            View.Customer.MenuView m = new View.Customer.MenuView();
+            m.setVisible(true);
+        }else if(user.toString().equals("Manager")){
+            this.dispose();
+            View.Manager.MenuView m = new View.Manager.MenuView();
+            m.setVisible(true);
+        }else if(user.toString().equals("Admin")){
+            this.dispose();
+            View.Admin.MenuView m = new View.Admin.MenuView();
+            m.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "Wrong Username or Password.");
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**

@@ -65,5 +65,10 @@ public class Customer extends User {
     public String getCustomerPhone() {
         return customerPhone;
     }
+    
+    @Override
+    public String toString(){
+        return "Customer";
+    }
 }
 

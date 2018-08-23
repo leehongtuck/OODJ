@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package View;
+package View.User;
 
 import Model.Admin;
+import Model.Customer;
 import Model.Login;
 import Model.User;
 import javax.swing.JOptionPane;
@@ -125,7 +126,7 @@ public class LoginView extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, user);
         if(user.toString().equals("Customer")){
             this.dispose();
-            View.Customer.MenuView m = new View.Customer.MenuView();
+            View.Customer.MenuView m = new View.Customer.MenuView((Customer) user);
             m.setVisible(true);
         }else if(user.toString().equals("Manager")){
             this.dispose();

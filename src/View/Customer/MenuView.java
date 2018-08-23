@@ -5,18 +5,33 @@
  */
 package View.Customer;
 
-import View.LoginView;
+import Model.Cart;
+import Model.Customer;
+import View.User.LoginView;
 
 /**
  *
  * @author ht-19
  */
 public class MenuView extends javax.swing.JFrame {
+    Customer customer;
+    Cart cart;
 
     /**
      * Creates new form MainMenuView
      */
     public MenuView() {
+        initComponents();
+    }
+    
+    public MenuView(Customer customer){
+        this.customer = customer;
+        initComponents();
+    }
+    
+    public MenuView(Customer customer, Cart cart){
+        this.customer = customer;
+        this.cart = cart;
         initComponents();
     }
 
@@ -32,10 +47,11 @@ public class MenuView extends javax.swing.JFrame {
         btnPlaceOrder = new javax.swing.JButton();
         btnOrderHistory = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
+        btnViewCart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnPlaceOrder.setText("Place Order");
+        btnPlaceOrder.setText("Product Catalog");
         btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlaceOrderActionPerformed(evt);
@@ -43,11 +59,23 @@ public class MenuView extends javax.swing.JFrame {
         });
 
         btnOrderHistory.setText("Order History");
+        btnOrderHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrderHistoryActionPerformed(evt);
+            }
+        });
 
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogoutActionPerformed(evt);
+            }
+        });
+
+        btnViewCart.setText("View Cart");
+        btnViewCart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewCartActionPerformed(evt);
             }
         });
 
@@ -61,19 +89,22 @@ public class MenuView extends javax.swing.JFrame {
                     .addComponent(btnLogout)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(btnPlaceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnOrderHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnOrderHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnViewCart, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+                .addGap(39, 39, 39)
                 .addComponent(btnPlaceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addGap(39, 39, 39)
+                .addComponent(btnViewCart, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
                 .addComponent(btnOrderHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLogout)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -81,9 +112,16 @@ public class MenuView extends javax.swing.JFrame {
 
     private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
         // TODO add your handling code here:
-        ProductCatalogView form = new ProductCatalogView();
-        this.dispose();
-        form.setVisible(true);
+        if(cart == null){
+            ProductCatalogView form = new ProductCatalogView(customer);
+            this.dispose();
+            form.setVisible(true);
+        }else{
+            ProductCatalogView form = new ProductCatalogView(customer, cart);
+            this.dispose();
+            form.setVisible(true);
+        }
+        
     }//GEN-LAST:event_btnPlaceOrderActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -92,6 +130,32 @@ public class MenuView extends javax.swing.JFrame {
         this.dispose();
         form.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnViewCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewCartActionPerformed
+        // TODO add your handling code here:
+        if(cart == null){
+            CartView form = new CartView(customer);
+            this.dispose();
+            form.setVisible(true);
+        }else{
+            CartView form = new CartView(customer, cart);
+            this.dispose();
+            form.setVisible(true);
+        }
+    }//GEN-LAST:event_btnViewCartActionPerformed
+
+    private void btnOrderHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderHistoryActionPerformed
+        // TODO add your handling code here:
+        if(cart == null){
+            OrderHistoryView form = new OrderHistoryView(customer);
+            this.dispose();
+            form.setVisible(true);
+        }else{
+            OrderHistoryView form = new OrderHistoryView(customer, cart);
+            this.dispose();
+            form.setVisible(true);
+        }
+    }//GEN-LAST:event_btnOrderHistoryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,5 +199,6 @@ public class MenuView extends javax.swing.JFrame {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnOrderHistory;
     private javax.swing.JButton btnPlaceOrder;
+    private javax.swing.JButton btnViewCart;
     // End of variables declaration//GEN-END:variables
 }

@@ -23,10 +23,6 @@ public class Order {
         orderItems = o;
     }
 
-    public void saveOrder() {
-
-    }
-
     public String getOrderId() {
         return orderId;
     }

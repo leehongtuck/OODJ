@@ -9,13 +9,8 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public boolean changeQuantity(int quantity){
-        if ((this.quantity + quantity)>= 0 ) {
-            this.quantity += quantity;
-            return true;
-        } else {
-            return false;
-        }
+    public void setQuantity(int quantity){
+        this.quantity = quantity;
     }
 
     public Product getProduct() {

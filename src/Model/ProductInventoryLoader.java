@@ -33,24 +33,42 @@ public class ProductInventoryLoader {
                     inventoryArrayList.add(new Inventory(product, txtQty));
                 }
             }
-            
-            for(int i = 0; i < inventoryArrayList.size(); i++){
-                String productId = inventoryArrayList.get(i).getProduct().getProductId();
-                String productName = inventoryArrayList.get(i).getProduct().getProductName();
-                Double price = inventoryArrayList.get(i).getProduct().getPrice();
-                String type;
-                if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
-                    type = "Non-Fragile";
-                }else if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
-                    type = "Fragile";
-                }
-                int quantity = inventoryArrayList.get(i).getQuantity();
-            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return inventoryArrayList;
+    }
+    
+    public Product load(String productId){
+         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+            String row, txtId, txtName, txtType;
+            Product product;
+            double txtPrice;
+            br.readLine();
+            while ((row = br.readLine()) != null) {
+                String str[] = row.split("\\|\\|");
+                txtId = str[0];
+                txtName = str[1];
+                txtPrice = Double.parseDouble(str[2]);
+                txtType = str[3];
+
+                if (txtType.equals("F")) {
+                    product = new FragileProduct(txtId, txtName, txtPrice);
+
+                } else if (txtType.equals("N")) {
+                    product = new NonFragileProduct(txtId, txtName, txtPrice);
+                }else{
+                    product = null;
+                }
+                return product;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       return null;  
     }
 }

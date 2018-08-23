@@ -12,10 +12,51 @@ public class Customer extends User {
     public Customer(String userId, String username, String customerId){
         super(userId, username);
         this.customerId = customerId;
-        String row, txtId, txtName, txtNric, txtAddress, txtPhone;
+        String row, fileCustId, fileCustName, fileNric, fileAddress, filePhone;
         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             while ((row = br.readLine()) != null) {
-                String[] str = row.split("//|//|");
+                String[] str = row.split("\\|\\|");
+                fileCustId = str[0];
+                fileCustName = str[1];
+                fileNric = str[2];
+                fileAddress = str[3];
+                filePhone = str[4];
+                
+                if (fileCustId.equals(customerId)) {
+                    customerName = fileCustName;
+                    customerNric = fileNric;
+                    customerAddress = fileAddress;
+                    customerPhone = filePhone;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public Customer(String customerId){
+        this.customerId = customerId;
+             String row, txtId, txtName, txtNric, txtAddress, txtPhone;
+        try (BufferedReader brCust = new BufferedReader(new FileReader(FILENAME));
+                BufferedReader brUser = new BufferedReader(new FileReader("user.txt"))) {
+            
+            
+            while((row = brUser.readLine())!= null){
+                String[] str = row.split("\\|\\|");
+                String txtUserId = str[0];
+                String txtUsername = str[1];
+                String txtCustomerId = str[3];
+                
+                if(customerId.equals(txtCustomerId)){
+                    this.userId = txtUserId;
+                    this.username = txtUsername;
+                }
+            }
+            
+            while ((row = brCust.readLine()) != null) {
+                String[] str = row.split("\\|\\|");
                 txtId = str[0];
                 txtName = str[1];
                 txtNric = str[2];

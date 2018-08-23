@@ -6,6 +6,7 @@
 package View.Customer;
 
 import Model.Cart;
+import Model.Customer;
 import Model.FragileProduct;
 import Model.Inventory;
 import Model.NonFragileProduct;
@@ -21,19 +22,29 @@ import javax.swing.table.DefaultTableModel;
  * @author ht-19
  */
 public class ProductCatalogView extends javax.swing.JFrame {
+    Customer customer;
     DefaultTableModel model;
     Cart cart;
     /**
      * Creates new form ProductCatalogView
      */
-    public ProductCatalogView() {   
+    
+    public ProductCatalogView(){
         initComponents();
         loadTable();
     }
     
-    public ProductCatalogView(Cart cart){
-        this();
-        this.cart = cart;    
+    public ProductCatalogView(Customer customer, Cart cart) {
+        this.cart = cart;
+        this.customer = customer;
+        initComponents();
+        loadTable();
+    }
+    
+    public ProductCatalogView(Customer customer){
+        this.customer = customer;
+        initComponents();
+        loadTable();
     }
     
     private void loadTable(){
@@ -178,11 +189,11 @@ public class ProductCatalogView extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(cart != null){
             this.dispose();
-            CartView form = new CartView(cart);
+            CartView form = new CartView(customer, cart);
             form.setVisible(true);
         }else{
             this.dispose();
-            CartView form = new CartView();
+            CartView form = new CartView(customer);
             form.setVisible(true);
         }
         
@@ -190,9 +201,16 @@ public class ProductCatalogView extends javax.swing.JFrame {
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        MenuView form = new MenuView();
-        form.setVisible(true);
+         if(cart == null){
+            MenuView form = new MenuView(customer);
+            this.dispose();
+            form.setVisible(true);
+        }else{
+            MenuView form = new MenuView(customer, cart);
+            this.dispose();
+            form.setVisible(true);
+        }
+        
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void btnAddToCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToCartActionPerformed
@@ -260,7 +278,7 @@ public class ProductCatalogView extends javax.swing.JFrame {
             }
             
             this.dispose();
-            CartView form = new CartView(cart);
+            CartView form = new CartView(customer, cart);
             form.setVisible(true);
         }
         

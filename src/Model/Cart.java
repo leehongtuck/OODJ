@@ -12,6 +12,12 @@ public class Cart {
     public void remove(OrderItem o){
         cartItems.remove(o);
     }
+    
+    public void clearItems(){
+        for(int i = cartItems.size()-1; i >=0 ; i--){
+            cartItems.remove(i);
+        }
+    }
 
     public ArrayList<OrderItem> getCartItems() {
         return cartItems;

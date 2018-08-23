@@ -1,7 +1,7 @@
 package Model;
 
 public class NonFragileProduct extends Product {
-   final double RATE = 0.5;
+   private final double RATE = 0.5;
 
     public NonFragileProduct(String productId, String productName, double price) {
         super(productId, productName);

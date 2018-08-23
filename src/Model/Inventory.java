@@ -9,12 +9,9 @@ public class Inventory {
         this.quantity = quantity;
     }
 
-    public boolean changeQuantity(int quantity) {
+    public void changeQuantity(int quantity) {
         if ((this.quantity + quantity)>= 0 ) {
             this.quantity += quantity;
-            return true;
-        } else {
-            return false;
         }
     }
 

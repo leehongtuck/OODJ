@@ -7,6 +7,10 @@ public class Admin extends User {
         super(userId, username);
         this.adminId = adminId;
     }
+    
+    public String getAdminId(){
+        return adminId;
+    }
 
     @Override
     public String toString() {

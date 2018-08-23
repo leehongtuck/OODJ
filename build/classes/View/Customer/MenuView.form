@@ -30,6 +30,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnPlaceOrder" min="-2" pref="366" max="-2" attributes="0"/>
                       <Component id="btnOrderHistory" alignment="0" min="-2" pref="366" max="-2" attributes="0"/>
+                      <Component id="btnViewCart" min="-2" pref="366" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="22" max="32767" attributes="0"/>
@@ -39,13 +40,15 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
               <Component id="btnPlaceOrder" min="-2" pref="68" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+              <Component id="btnViewCart" min="-2" pref="68" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
               <Component id="btnOrderHistory" min="-2" pref="70" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="16" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -53,7 +56,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="btnPlaceOrder">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Place Order"/>
+        <Property name="text" type="java.lang.String" value="Product Catalog"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPlaceOrderActionPerformed"/>
@@ -63,6 +66,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Order History"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOrderHistoryActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnLogout">
       <Properties>
@@ -70,6 +76,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnViewCart">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="View Cart"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewCartActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

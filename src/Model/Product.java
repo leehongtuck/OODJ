@@ -9,7 +9,7 @@ public abstract class Product {
         this.productId = productId;
         this.productName = productName;
     }
-
+  
     public Double getPrice() {
         return price;
     }

@@ -6,7 +6,13 @@
 package View.Customer;
 
 import Model.Cart;
+import Model.Customer;
+import Model.Inventory;
+import Model.Order;
 import Model.OrderItem;
+import Model.OrderManager;
+import Model.ProductInventoryLoader;
+import View.User.LoginView;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CartView extends javax.swing.JFrame {
     DefaultTableModel model;
+    Customer customer;
     Cart cart;
     /**
      * Creates new form CartView
@@ -26,8 +33,15 @@ public class CartView extends javax.swing.JFrame {
         loadTable();
     }
     
-    public CartView(Cart cart){
+    public CartView(Customer customer, Cart cart){
         this.cart = cart;
+        this.customer = customer;
+        initComponents();
+        loadTable();
+    }
+    
+    public CartView(Customer customer){
+        this.customer = customer;
         initComponents();
         loadTable();
     }
@@ -41,28 +55,41 @@ public class CartView extends javax.swing.JFrame {
         };
         model.addColumn("Product ID");
         model.addColumn("Product");
-        model.addColumn("Price (RM)");
+        model.addColumn("Price Per Unit (RM)");
         model.addColumn("Type");
         model.addColumn("Quantity");
+        model.addColumn("Total Price (RM)");
         
         if(cart != null){
-            ArrayList<OrderItem> cartItems = cart.getCartItems();
-            
-            for(int i = 0; i < cartItems.size(); i++){
-                String productId = cartItems.get(i).getProduct().getProductId();
-                String productName = cartItems.get(i).getProduct().getProductName();
-                String price = Double.toString(cartItems.get(i).getProduct().getPrice());
-                String type = "";
-                if(cartItems.get(i).getProduct().toString().equals("N")){
-                    type = "Non-Fragile";
-                }else if(cartItems.get(i).getProduct().toString().equals("F")){
-                    type = "Fragile";
+            if(cart.getCartItems().isEmpty()){
+                JOptionPane.showMessageDialog(this, "The cart is empty.");
+                btnRemove.setEnabled(false);
+                btnEditQuantity.setEnabled(false);
+                btnCheckout.setEnabled(false);     
+            }else{
+                 ArrayList<OrderItem> cartItems = cart.getCartItems();
+                 Double grandTotal = 0.0;
+                for(int i = 0; i < cartItems.size(); i++){
+                    String productId = cartItems.get(i).getProduct().getProductId();
+                    String productName = cartItems.get(i).getProduct().getProductName();
+                    Double price = cartItems.get(i).getProduct().getPrice();
+                    String type = "";
+                    if(cartItems.get(i).getProduct().toString().equals("N")){
+                        type = "Non-Fragile";
+                    }else if(cartItems.get(i).getProduct().toString().equals("F")){
+                        type = "Fragile";
+                    }
+                    int quantity = cartItems.get(i).getQuantity();
+                    Double totalPrice = price * quantity;
+                    grandTotal += totalPrice;
+                    Object[] data = {productId, productName, price, type, quantity, totalPrice};
+                    model.addRow(data);
+                    
                 }
-                String quantity = Integer.toString(cartItems.get(i).getQuantity());
-                Object[] data = {productId, productName, price, type, quantity};
-                model.addRow(data);
+                lblTotalPrice.setText("RM" + Double.toString(grandTotal));
+
             }
-            
+                       
         }else{
             JOptionPane.showMessageDialog(this, "The cart is empty.");
             btnRemove.setEnabled(false);
@@ -73,6 +100,14 @@ public class CartView extends javax.swing.JFrame {
         
     }
 
+    private void refreshTable(){
+        if(model.getRowCount() > 0){
+            for(int i = model.getRowCount() - 1; i >= 0 ; i--){
+                model.removeRow(i);
+            }
+            loadTable();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,6 +126,8 @@ public class CartView extends javax.swing.JFrame {
         lblTitle = new javax.swing.JLabel();
         btnProductCatalog = new javax.swing.JButton();
         btnMainMenu = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lblTotalPrice = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -119,8 +156,18 @@ public class CartView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblCart);
 
         btnRemove.setText("Remove ");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
 
         btnEditQuantity.setText("Edit Quantity");
+        btnEditQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditQuantityActionPerformed(evt);
+            }
+        });
 
         btnCheckout.setText("Checkout");
         btnCheckout.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +186,13 @@ public class CartView extends javax.swing.JFrame {
         });
 
         btnMainMenu.setText("Main Menu");
+        btnMainMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMainMenuActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Total Price:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,24 +202,25 @@ public class CartView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRemove)
-                                .addGap(31, 31, 31)
-                                .addComponent(btnEditQuantity)
-                                .addGap(29, 29, 29)
-                                .addComponent(btnCheckout)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
-                                .addComponent(btnProductCatalog))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnProductCatalog)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(257, 257, 257)
-                        .addComponent(lblTitle)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEditQuantity, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnRemove, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCheckout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblTotalPrice)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,16 +228,23 @@ public class CartView extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addComponent(lblTitle)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRemove)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEditQuantity)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCheckout)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(lblTotalPrice))))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRemove)
-                    .addComponent(btnEditQuantity)
-                    .addComponent(btnCheckout)
-                    .addComponent(btnProductCatalog))
-                .addGap(18, 18, 18)
-                .addComponent(btnMainMenu)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnProductCatalog)
+                    .addComponent(btnMainMenu))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
@@ -190,19 +252,129 @@ public class CartView extends javax.swing.JFrame {
 
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
         // TODO add your handling code here:
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to confirm purchase?", "Confirm",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(dialogResult == JOptionPane.YES_OPTION){
+          // Saving code here
+          if(customer != null){
+            Order o = new Order(customer, cart.getCartItems());
+            new OrderManager().addOrder(o);
+            cart.clearItems();
+            JOptionPane.showMessageDialog(this, "Purchase successful!");
+            this.dispose();
+            new MenuView(customer, cart).setVisible(true);
+          }else{
+              JOptionPane.showMessageDialog(this, "An error occured, please log in again.");
+              this.dispose();
+              new LoginView().setVisible(true);
+          }
+          
+          
+        }else if (dialogResult == JOptionPane.NO_OPTION) {
+            System.out.println("No button clicked");
+            return;
+        }else if (dialogResult == JOptionPane.CLOSED_OPTION) {
+            System.out.println("JOptionPane closed");
+            return;
+        }
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
     private void btnProductCatalogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductCatalogActionPerformed
         // TODO add your handling code here:
         this.dispose();
         if(cart != null){
-            ProductCatalogView form = new ProductCatalogView(cart);
+            ProductCatalogView form = new ProductCatalogView(customer, cart);
             form.setVisible(true);
         }else{
-            ProductCatalogView form = new ProductCatalogView();
+            ProductCatalogView form = new ProductCatalogView(customer);
             form.setVisible(true);
         }
     }//GEN-LAST:event_btnProductCatalogActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        // TODO add your handling code here:
+        if(tblCart.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to remove!");
+            return;                
+        }
+        
+        int rowSelect = tblCart.getSelectedRow();
+        String productId = (String)model.getValueAt(rowSelect, 0);
+        
+        for(int i = 0; i < cart.getCartItems().size(); i++){
+            if(cart.getCartItems().get(i).getProduct().getProductId().equals(productId)){
+                cart.getCartItems().remove(i);
+            }
+        }
+        refreshTable();
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void btnEditQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQuantityActionPerformed
+        // TODO add your handling code here:
+        if(tblCart.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to edit!");
+            return;                
+        }
+        
+        int rowSelect = tblCart.getSelectedRow();
+        String productId = (String)model.getValueAt(rowSelect, 0);
+        String strQuantity = JOptionPane.showInputDialog(this, "Change quantity to:");
+        
+        //Load current stock
+        ProductInventoryLoader p = new ProductInventoryLoader();
+        ArrayList<Inventory> inventoryArrayList = p.load();
+        int stock = 0;
+        int quantity = 0;
+        for(int i = 0; i < inventoryArrayList.size(); i++){
+            if(inventoryArrayList.get(i).getProduct().getProductId().equals(productId)){
+                stock = inventoryArrayList.get(i).getQuantity();
+                break;
+            }
+        }
+        
+        //Check quantity is less than stock
+        if(strQuantity != null){
+            try{          
+                quantity= Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }else if(quantity > stock){
+                    JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                    return;
+                }
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            }
+            
+            //edit the quantity in the cart arraylist
+            for(int i = 0; i < cart.getCartItems().size(); i++){
+                OrderItem itemToEdit;
+                if(cart.getCartItems().get(i).getProduct().getProductId().equals(productId)){
+                    cart.getCartItems().get(i).setQuantity(quantity);
+                          
+                }
+            }
+            refreshTable();
+        }      
+
+       
+        
+    }//GEN-LAST:event_btnEditQuantityActionPerformed
+
+    private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
+        // TODO add your handling code here:
+        if(cart == null){
+            MenuView form = new MenuView(customer);
+            this.dispose();
+            form.setVisible(true);
+        }else{
+            MenuView form = new MenuView(customer, cart);
+            this.dispose();
+            form.setVisible(true);
+        }
+    }//GEN-LAST:event_btnMainMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,8 +418,10 @@ public class CartView extends javax.swing.JFrame {
     private javax.swing.JButton btnProductCatalog;
     private javax.swing.JButton btnRemove;
     private javax.swing.JDialog jDialog1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTotalPrice;
     private javax.swing.JTable tblCart;
     // End of variables declaration//GEN-END:variables
 }

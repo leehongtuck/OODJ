@@ -5,19 +5,54 @@
  */
 package View.Admin;
 
+import Model.Customer;
+import Model.UserProfileLoader;
+import Model.UserProfileManager;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class ManageCustomerView extends javax.swing.JFrame {
-
+    DefaultTableModel model;
     /**
      * Creates new form ManagerCustomerView
      */
     public ManageCustomerView() {
         initComponents();
+        loadTable();
     }
-
+    
+    private void loadTable(){
+        model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        model.addColumn("Customer ID");
+        model.addColumn("Name");
+        model.addColumn("NRIC");
+        model.addColumn("Address");
+        model.addColumn("Phone");
+        
+        ArrayList<Customer> customers = new UserProfileLoader().loadCustomer();
+        
+        for(int i = 0; i < customers.size(); i++){
+            String customerId = customers.get(i).getCustomerId();
+            String name = customers.get(i).getCustomerName();
+            String nric = customers.get(i).getCustomerNric();
+            String address = customers.get(i).getCustomerAddress();
+            String phone = customers.get(i).getCustomerPhone();
+            Object[] data = {customerId, name, nric, address, phone};
+            model.addRow(data);
+        }
+        tblCustomer.setModel(model);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,35 +62,45 @@ public class ManageCustomerView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        btnViewAll = new javax.swing.JButton();
+        btnEditCustomer = new javax.swing.JButton();
+        btnDeleteCustomer = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        tblCustomer = new javax.swing.JTable();
+        btnAddCustomer = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton3.setText("View All Customers");
-
-        jButton4.setText("Edit Customer");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnViewAll.setText("View All Customers");
+        btnViewAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnViewAllActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Delete Customer");
+        btnEditCustomer.setText("Edit Customer");
+        btnEditCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditCustomerActionPerformed(evt);
+            }
+        });
+
+        btnDeleteCustomer.setText("Delete Customer");
+        btnDeleteCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteCustomerActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Main Menu");
 
         jLabel1.setText("Manage Customer Accounts");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCustomer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -72,13 +117,11 @@ public class ManageCustomerView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblCustomer);
 
-        jButton1.setText("Add Customer");
+        btnAddCustomer.setText("Add Customer");
 
-        jTextField1.setText("jTextField1");
-
-        jButton2.setText("Search");
+        btnSearch.setText("Search ID");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,17 +132,17 @@ public class ManageCustomerView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnAddCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDeleteCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnEditCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(294, 294, 294))
                             .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3)
+                            .addComponent(btnViewAll)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(204, 204, 204)
                                 .addComponent(jLabel1)))
@@ -108,9 +151,9 @@ public class ManageCustomerView extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2))
+                                .addComponent(btnSearch))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
@@ -121,19 +164,19 @@ public class ManageCustomerView extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch))
                 .addGap(13, 13, 13)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(btnViewAll)
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4))
+                    .addComponent(btnAddCustomer)
+                    .addComponent(btnEditCustomer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
+                    .addComponent(btnDeleteCustomer)
                     .addComponent(jButton6))
                 .addContainerGap())
         );
@@ -141,9 +184,36 @@ public class ManageCustomerView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditCustomerActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        if(tblCustomer.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an customer to edit!");
+            return;                
+        }
+        this.dispose();
+        int rowSelect = tblCustomer.getSelectedRow();
+        String customerId = (String)model.getValueAt(rowSelect, 0);
+        new EditCustomerView(new UserProfileLoader().loadCustomer(customerId)).setVisible(true);
+    }//GEN-LAST:event_btnEditCustomerActionPerformed
+
+    private void btnViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllActionPerformed
+        // TODO add your handling code here:
+        loadTable();
+    }//GEN-LAST:event_btnViewAllActionPerformed
+
+    private void btnDeleteCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteCustomerActionPerformed
+        // TODO add your handling code here:
+        if(tblCustomer.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select a customer to remove!");
+            return;                
+        }
+        
+        int rowSelect = tblCustomer.getSelectedRow();
+        String customerId = (String)model.getValueAt(rowSelect, 0);
+        new UserProfileManager().deleteUser(new UserProfileLoader().loadCustomer(customerId));
+        
+        loadTable();
+    }//GEN-LAST:event_btnDeleteCustomerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -182,15 +252,15 @@ public class ManageCustomerView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAddCustomer;
+    private javax.swing.JButton btnDeleteCustomer;
+    private javax.swing.JButton btnEditCustomer;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnViewAll;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblCustomer;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

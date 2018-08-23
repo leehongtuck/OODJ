@@ -26,12 +26,12 @@ public class OrderLoader {
             String row;
             br.readLine();
             while((row = br.readLine())!= null){
+                System.out.println(row);
                 String[] data = row.split("\\|\\|");
                 String fileOrderId = data[0];
-                String fileCustomerId = data[1];
-                
+                String fileCustomerId = data[1];            
                 String fileOrderItems = data[2];
-                String orderItemsData[] = fileOrderItems.split(",");
+                String orderItemsData[] = fileOrderItems.split(";");
                 ArrayList<OrderItem> orderItems = new ArrayList<>();
                 
                 //load order items into order
@@ -48,25 +48,28 @@ public class OrderLoader {
                 orderArrayList.add(new Order(fileOrderId, customer, orderItems));
             }
         } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
             Logger.getLogger(OrderLoader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            System.out.println("cannot read");
             Logger.getLogger(OrderLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
         return orderArrayList;
     }
     
     public ArrayList<Order> load(Customer customer){
+        System.out.println("im inside");
         try(BufferedReader br = new BufferedReader(new FileReader(FILENAME))){
             String row;
             br.readLine();
             while((row = br.readLine())!= null){
-                String[] data = row.split("\\|\\|");
+                System.out.println(row);
+               String[] data = row.split("\\|\\|");
                 String fileOrderId = data[0];
-                System.out.println(fileOrderId);
                 String fileCustomerId = data[1];
                 String fileOrderItems = data[2];
-                String orderItemsData[] = fileOrderItems.split(",");
-                ArrayList<OrderItem> orderItems = new ArrayList<>();
+                String orderItemsData[] = fileOrderItems.split(";");
+               ArrayList<OrderItem> orderItems = new ArrayList<>();
                 
                 if(customer.getCustomerId().equals(fileCustomerId)){
                     //load order items into order
@@ -77,11 +80,10 @@ public class OrderLoader {
                         //load product into order item
                         Product product = new ProductInventoryLoader().load(orderItemData[0]);                    
                         orderItems.add(new OrderItem(product, Integer.parseInt(orderItemData[1])));
-                        System.out.println(s);
                     }
                     orderArrayList.add(new Order(fileOrderId, customer, orderItems));
-                }                                
-            }
+               }                                
+           }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(OrderLoader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -72,13 +72,13 @@ public class OrderManager {
 
     }
 
-    public String formatOrderItems(Order order){
+    private String formatOrderItems(Order order){
         String items = "";
         for (int i = 0; i < order.getOrderItems().size(); i++) {
             //add a comma if the records are not ending, no comma if is the last one
             if (i != order.getOrderItems().size() - 1) {
                 items += "(" + order.getOrderItems().get(i).getProduct().getProductId() + ","
-                        + order.getOrderItems().get(i).getQuantity() + "),";
+                        + order.getOrderItems().get(i).getQuantity() + ");";
             } else {
                 items += "(" + order.getOrderItems().get(i).getProduct().getProductId() + ","
                         + order.getOrderItems().get(i).getQuantity() + ")";

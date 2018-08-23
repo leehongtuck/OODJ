@@ -1,9 +1,17 @@
 
 import Model.FragileProduct;
 import Model.Inventory;
+import Model.OrderItem;
 import Model.Product;
 import Model.ProductInventoryLoader;
+import Model.UserProfileLoader;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,41 +25,31 @@ import java.util.ArrayList;
  * @author ht-19
  */
 public class Main {
-
+    private static final String FILENAME = "order.txt";
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        /*
-        ProductInventoryLoader p = new ProductInventoryLoader();
-        ArrayList<Inventory> inventoryArrayList = p.load();
+    public static void main(String[] args) throws IOException {
         
-        String[][] test = new String[inventoryArrayList.size()][];
-        // TODO code application logic here
-        
-        for(int i = 0; i < inventoryArrayList.size(); i++){
-            String productId = inventoryArrayList.get(i).getProduct().getProductId();
-            String productName = inventoryArrayList.get(i).getProduct().getProductName();
-            String price = Double.toString(inventoryArrayList.get(i).getProduct().getPrice());
-            String type = "";
-            if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
-                type = "Non-Fragile";
-            }else if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
-                type = "Fragile";
+    /*    try {
+            BufferedReader br = new BufferedReader(new FileReader(FILENAME));
+            System.out.println(br.readLine());
+            String row;
+            while((row = br.readLine())!= null){
+                System.out.println(row);
+                String data[] = row.split("\\|\\|");
+                 String fileOrderId = data[0];
+                String fileCustomerId = data[1];            
+                String fileOrderItems = data[2];
+                String orderItemsData[] = fileOrderItems.split(",");
+                ArrayList<OrderItem> orderItems = new ArrayList<>();
             }
-            String quantity = Integer.toString(inventoryArrayList.get(i).getQuantity());
-            String[] data = {productId, productName, price, type, quantity};
-            test[i] = data;
-        }*/
-        
-        Product p1 = new FragileProduct("P001", "test", 30.0); 
-        Product p2 = new FragileProduct("P001", "test", 30.0); 
-        if(p1.equals(p2)){
-            System.out.println("yes equal");
-        }else{
-            System.out.println("no not");
+            br.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+    */
+    new UserProfileLoader().loadCustomer();    
     }
     
 }

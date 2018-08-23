@@ -5,17 +5,33 @@
  */
 package View.Admin;
 
+import Model.Customer;
+import Model.UserProfileManager;
+
 /**
  *
  * @author ht-19
  */
 public class EditCustomerView extends javax.swing.JFrame {
-
+    Customer customer;
     /**
      * Creates new form EditCustomerView
      */
     public EditCustomerView() {
         initComponents();
+    }
+    
+    public EditCustomerView(Customer customer){
+        this.customer = customer;
+        initComponents();
+        loadTextField();
+    }
+    
+    private void loadTextField(){
+        txtName.setText(customer.getCustomerName());
+        txtNric.setText(customer.getCustomerNric());
+        txtAddress.setText(customer.getCustomerAddress());
+        txtPhone.setText(customer.getCustomerPhone());
     }
 
     /**
@@ -27,23 +43,28 @@ public class EditCustomerView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtPrice2 = new javax.swing.JTextField();
-        txtPrice = new javax.swing.JTextField();
+        txtPhone = new javax.swing.JTextField();
+        txtNric = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnConfirm = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        txtProductName = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtPrice1 = new javax.swing.JTextField();
+        txtAddress = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel5.setText("Phone");
 
-        jButton1.setText("Confirm Changes");
+        btnConfirm.setText("Confirm Changes");
+        btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancel");
 
@@ -69,12 +90,12 @@ public class EditCustomerView extends javax.swing.JFrame {
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(btnConfirm)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                        .addComponent(txtProductName)
-                        .addComponent(txtPrice1, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                        .addComponent(txtPrice2, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)))
+                        .addComponent(txtNric, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                        .addComponent(txtName)
+                        .addComponent(txtAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                        .addComponent(txtPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)))
                 .addContainerGap(51, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(178, Short.MAX_VALUE)
@@ -89,28 +110,40 @@ public class EditCustomerView extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNric, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtPrice2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnConfirm)
                     .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+        // TODO add your handling code here:
+        customer.setCustomerName(txtName.getText());
+        customer.setCustomerNric(txtNric.getText());
+        customer.setCustomerNric(txtAddress.getText());
+        customer.setCustomerPhone(txtPhone.getText());
+        
+        new UserProfileManager().editUser(customer);
+        this.dispose();
+        new ManageCustomerView().setVisible(true);
+    }//GEN-LAST:event_btnConfirmActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,16 +181,16 @@ public class EditCustomerView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnConfirm;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField txtPrice;
-    private javax.swing.JTextField txtPrice1;
-    private javax.swing.JTextField txtPrice2;
-    private javax.swing.JTextField txtProductName;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtNric;
+    private javax.swing.JTextField txtPhone;
     // End of variables declaration//GEN-END:variables
 }

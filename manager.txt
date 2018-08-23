@@ -1,1 +1,2 @@
-C002||Hong Tock||980818||||Puchong||012345
+ManagerId||ManagerName||ManagerEmployeeId
+M001||Boss||E012

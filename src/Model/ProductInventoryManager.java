@@ -71,8 +71,7 @@ public class ProductInventoryManager {
                 String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 int txtStock = Integer.parseInt(data[4]);
-                if (p.getProductId().equals(txtId)) {
-                    
+                if (p.getProductId().equals(txtId)) {         
                     fileData += p.getProductId() + "||" + p.getProductName() + "||" 
                             + p.getPrice() + "||" + p.toString() + "||" + Integer.toString(txtStock - quantity) 
                             + System.lineSeparator();

@@ -35,48 +35,17 @@ public class Customer extends User {
             e.printStackTrace();
         }
     }
-    
-    public Customer(String customerId){
+
+    public Customer(String userId, String username, String customerId, String customerName,
+            String customerNric, String customerAddress, String customerPhone){
+        super(userId, username);
         this.customerId = customerId;
-             String row, txtId, txtName, txtNric, txtAddress, txtPhone;
-        try (BufferedReader brCust = new BufferedReader(new FileReader(FILENAME));
-                BufferedReader brUser = new BufferedReader(new FileReader("user.txt"))) {
-            
-            
-            while((row = brUser.readLine())!= null){
-                String[] str = row.split("\\|\\|");
-                String txtUserId = str[0];
-                String txtUsername = str[1];
-                String txtCustomerId = str[3];
-                
-                if(customerId.equals(txtCustomerId)){
-                    this.userId = txtUserId;
-                    this.username = txtUsername;
-                }
-            }
-            
-            while ((row = brCust.readLine()) != null) {
-                String[] str = row.split("\\|\\|");
-                txtId = str[0];
-                txtName = str[1];
-                txtNric = str[2];
-                txtAddress = str[3];
-                txtPhone = str[4];
-
-                if (txtId.equals(customerId)) {
-                    customerName = txtName;
-                    customerNric = txtNric;
-                    customerAddress = txtAddress;
-                    customerPhone = txtPhone;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.customerName = customerName;
+        this.customerNric = customerNric;
+        this.customerAddress = customerAddress;
+        this.customerPhone = customerPhone;
     }
-
+    
     public Customer(String username, String customerName,
                     String customerNric, String customerAddress, String customerPhone){
         super(username);
@@ -105,6 +74,22 @@ public class Customer extends User {
 
     public String getCustomerPhone() {
         return customerPhone;
+    }
+    
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setCustomerNric(String customerNric) {
+        this.customerNric = customerNric;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
     
     @Override

@@ -6,9 +6,11 @@ public class UserProfileManager {
     private static final String USERFILENAME = "user.txt";
     private static final String MANAGERFILENAME = "manager.txt";
     private static final String CUSTOMERFILENAME = "customer.txt";
-    private static final String FILEHEADER = "CustomerId||CustomerName||CustomerNRIC||CustomerAddress||CustomerPhone"
+    private static final String USERFILEHEADER = "UserID||Username||Password||PositionID";
+    private static final String CUSTOMERFILEHEADER = "CustomerId||CustomerName||CustomerNRIC||CustomerAddress||CustomerPhone"
             + System.lineSeparator();
-
+    private static final String MANAGERFILEHEADER = "ManagerId||ManagerName||ManagerEmployeeId";
+    
     private boolean checkDuplicate(Customer c) {
         try (BufferedReader br = new BufferedReader(new FileReader(CUSTOMERFILENAME))) {
             String row;
@@ -51,12 +53,12 @@ public class UserProfileManager {
     }
 
     public void editUser(Customer c) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CUSTOMERFILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(CUSTOMERFILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(CUSTOMERFILENAME))) {
             String row;
             String fileData = "";
+            br.readLine();
             while ((row = br.readLine()) != null) {
-                String[] data = row.split("//|//|");
+                String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 if (c.getCustomerId().equals(txtId)) {
                     fileData += c.getCustomerName() + "||" + c.getCustomerNric() + "||" +
@@ -65,8 +67,11 @@ public class UserProfileManager {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(CUSTOMERFILENAME))){
+                bw.write(CUSTOMERFILEHEADER);
+                bw.write(fileData);
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,6 +82,7 @@ public class UserProfileManager {
              BufferedReader br = new BufferedReader(new FileReader(MANAGERFILENAME))) {
             String row;
             String fileData = "";
+            br.readLine();
             while ((row = br.readLine()) != null) {
                 String[] data = row.split("//|//|");
                 String txtId = data[0];
@@ -87,7 +93,7 @@ public class UserProfileManager {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
+            bw.write(CUSTOMERFILEHEADER);
             bw.write(fileData);
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,30 +101,49 @@ public class UserProfileManager {
     }
 
     public void deleteUser(Customer c) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CUSTOMERFILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(CUSTOMERFILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(CUSTOMERFILENAME))) {
             String row;
             String fileData = "";
+            br.readLine();
             while ((row = br.readLine()) != null) {
-                String[] data = row.split("//|//|");
+                String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 if (!(c.getCustomerId().equals(txtId))) {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(CUSTOMERFILENAME))){
+                bw.write(CUSTOMERFILEHEADER);
+                bw.write(fileData);
+            }          
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(USERFILENAME))) {
+            String row;
+            String fileData = "";
+            br.readLine();
+            while ((row = br.readLine()) != null) {
+                String[] data = row.split("\\|\\|");
+                String txtId = data[3];
+                if (!(c.getCustomerId().equals(txtId))) {
+                    fileData += row + System.lineSeparator();
+                }
+            }
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(USERFILENAME))){
+                bw.write(USERFILEHEADER);
+                bw.write(fileData);
+            }          
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteUser(Manager m) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(MANAGERFILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(MANAGERFILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(MANAGERFILENAME))) {
             String row;
-
             String fileData = "";
+            br.readLine();
             while ((row = br.readLine()) != null) {
                 String[] data = row.split("//|//|");
                 String txtId = data[0];
@@ -126,8 +151,28 @@ public class UserProfileManager {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(MANAGERFILENAME))){
+                bw.write(MANAGERFILEHEADER);
+                bw.write(fileData);
+            }     
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(USERFILENAME))) {
+            String row;
+            String fileData = "";
+            br.readLine();
+            while ((row = br.readLine()) != null) {
+                String[] data = row.split("\\|\\|");
+                String txtId = data[3];
+                if (!(m.getManagerId().equals(txtId))) {
+                    fileData += row + System.lineSeparator();
+                }
+            }
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(USERFILENAME))){
+                bw.write(USERFILEHEADER);
+                bw.write(fileData);
+            }          
         } catch (IOException e) {
             e.printStackTrace();
         }

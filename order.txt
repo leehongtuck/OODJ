@@ -1,2 +1,2 @@
 OrderId||CustomerId||OrderItems
-O001||C001||(P001,1)
+O001||C001||(P001,1);(P001,2)

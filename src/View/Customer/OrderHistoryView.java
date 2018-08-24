@@ -8,6 +8,7 @@ package View.Customer;
 import Model.Cart;
 import Model.Customer;
 import Model.Order;
+import Model.OrderItem;
 import Model.OrderLoader;
 import Model.OrderManager;
 import java.util.ArrayList;
@@ -54,10 +55,26 @@ public class OrderHistoryView extends javax.swing.JFrame {
         ArrayList<Order> orders = new OrderLoader().load(customer);
         for(int i = 0; i < orders.size(); i++){
             String orderId = orders.get(i).getOrderId();
-            String orderItems = new OrderManager().formatOrderItems(orders.get(i));
+            String orderItems = formatOrderItems(orders.get(i).getOrderItems());
             Object[] data = {orderId, orderItems};
             model.addRow(data);
         }
+        tblOrder.setModel(model);
+    }
+    
+    private String formatOrderItems(ArrayList<OrderItem> o){
+        String items = "";
+        for (int i = 0; i < o.size(); i++) {
+            //add a comma if the records are not ending, no comma if is the last one
+            if (i != o.size() - 1) {
+                items += "(" + o.get(i).getProduct().getProductName() + ","
+                        + o.get(i).getQuantity() + "),  ";
+            } else {
+                items += "(" + o.get(i).getProduct().getProductName() + ","
+                        + o.get(i).getQuantity() + ")";
+            }
+        }
+        return items;
     }
 
     /**

@@ -13,11 +13,7 @@ public abstract class User {
         this.userId = Utility.generateId("user.txt", "U");
         this.username = username;
     }
-    
-    public User(){
-        
-    }
-
+   
     public String getUserId() {
         return userId;
     }

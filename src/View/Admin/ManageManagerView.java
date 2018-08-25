@@ -5,17 +5,72 @@
  */
 package View.Admin;
 
+import Model.Customer;
+import Model.Manager;
+import Model.UserProfileLoader;
+import Model.UserProfileManager;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class ManageManagerView extends javax.swing.JFrame {
-
+    DefaultTableModel model;
     /**
      * Creates new form ManageManagerView
      */
     public ManageManagerView() {
         initComponents();
+        loadTable();
+    }
+    
+    private void loadTable(){
+        model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        model.addColumn("Manager ID");
+        model.addColumn("Name");
+        model.addColumn("Employee ID");
+        
+        ArrayList<Manager> managers = new UserProfileLoader().loadManager();
+        
+        for(int i = 0; i < managers.size(); i++){
+            String managerId = managers.get(i).getManagerId();
+            String name = managers.get(i).getManagerName();
+            String employeeId = managers.get(i).getManagerEmployeeId();
+            Object[] data = {managerId, name, employeeId};
+            model.addRow(data);
+        }
+        tblManager.setModel(model);
+    }
+    
+    private void loadTable(String search){
+        model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        model.addColumn("Manager ID");
+        model.addColumn("Name");
+        model.addColumn("Employee ID");
+        
+        ArrayList<Manager> managers = new UserProfileLoader().loadManager(search);
+        
+        for(int i = 0; i < managers.size(); i++){
+            String managerId = managers.get(i).getManagerId();
+            String name = managers.get(i).getManagerName();
+            String employeeId = managers.get(i).getManagerEmployeeId();
+            Object[] data = {managerId, name, employeeId};
+            model.addRow(data);
+        }
+        tblManager.setModel(model);
     }
 
     /**
@@ -27,26 +82,31 @@ public class ManageManagerView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton5 = new javax.swing.JButton();
+        btnDeleteManager = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        tblManager = new javax.swing.JTable();
+        btnAddManager = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
+        btnViewAll = new javax.swing.JButton();
+        btnEditManager = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton5.setText("Delete Manager");
+        btnDeleteManager.setText("Delete Manager");
+        btnDeleteManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteManagerActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Main Menu");
 
         jLabel1.setText("Manage Manager Accounts");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblManager.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -63,20 +123,33 @@ public class ManageManagerView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblManager);
 
-        jButton1.setText("Add Manager");
-
-        jTextField1.setText("jTextField1");
-
-        jButton2.setText("Search");
-
-        jButton3.setText("View All Managers");
-
-        jButton4.setText("Edit Manager");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnAddManager.setText("Add Manager");
+        btnAddManager.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnAddManagerActionPerformed(evt);
+            }
+        });
+
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        btnViewAll.setText("View All Managers");
+        btnViewAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewAllActionPerformed(evt);
+            }
+        });
+
+        btnEditManager.setText("Edit Manager");
+        btnEditManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditManagerActionPerformed(evt);
             }
         });
 
@@ -90,21 +163,21 @@ public class ManageManagerView extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton3)
+                    .addComponent(btnViewAll)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
+                        .addComponent(btnSearch))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnDeleteManager)
+                            .addComponent(btnAddManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnEditManager, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(294, 294, 294))
                             .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
@@ -116,19 +189,19 @@ public class ManageManagerView extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch))
                 .addGap(13, 13, 13)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(btnViewAll)
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4))
+                    .addComponent(btnAddManager)
+                    .addComponent(btnEditManager))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
+                    .addComponent(btnDeleteManager)
                     .addComponent(jButton6))
                 .addContainerGap())
         );
@@ -136,9 +209,47 @@ public class ManageManagerView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditManagerActionPerformed
+        // TODO add your handling code here
+        if(tblManager.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select a manager to edit!");
+            return;                
+        }
+        this.dispose();
+        int rowSelect = tblManager.getSelectedRow();
+        String managerId = (String)model.getValueAt(rowSelect, 0);
+        new EditManagerView(new UserProfileLoader().createManager(managerId)).setVisible(true);                 
+    }//GEN-LAST:event_btnEditManagerActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        String search = txtSearch.getText();
+        loadTable(search);        
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllActionPerformed
+        // TODO add your handling code here:
+        loadTable();
+    }//GEN-LAST:event_btnViewAllActionPerformed
+
+    private void btnAddManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddManagerActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new AddManagerView().setVisible(true);
+    }//GEN-LAST:event_btnAddManagerActionPerformed
+
+    private void btnDeleteManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteManagerActionPerformed
+        // TODO add your handling code here:
+        if(tblManager.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select a manager to remove!");
+            return;                
+        }
+        int rowSelect = tblManager.getSelectedRow();
+        String managerId = (String)model.getValueAt(rowSelect, 0);
+        new UserProfileManager().deleteUser(new UserProfileLoader().createManager(managerId));
+        
+        loadTable();
+    }//GEN-LAST:event_btnDeleteManagerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -176,15 +287,15 @@ public class ManageManagerView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAddManager;
+    private javax.swing.JButton btnDeleteManager;
+    private javax.swing.JButton btnEditManager;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnViewAll;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblManager;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,2 +1,3 @@
 CustomerId||CustomerName||CustomerNRIC||CustomerAddress||CustomerPhone
-Leed||Subang||Subang||012-345
+C002||Wuckatooe||1234||Subang||123
+C003||Lee||9801||Puchong||0123-45

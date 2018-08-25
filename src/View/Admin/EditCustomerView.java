@@ -47,7 +47,7 @@ public class EditCustomerView extends javax.swing.JFrame {
         txtNric = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         btnConfirm = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
@@ -66,7 +66,12 @@ public class EditCustomerView extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Cancel");
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Edit Customer");
 
@@ -86,7 +91,7 @@ public class EditCustomerView extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
-                    .addComponent(jButton2)
+                    .addComponent(btnCancel)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -126,7 +131,7 @@ public class EditCustomerView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirm)
-                    .addComponent(jButton2))
+                    .addComponent(btnCancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -137,13 +142,19 @@ public class EditCustomerView extends javax.swing.JFrame {
         // TODO add your handling code here:
         customer.setCustomerName(txtName.getText());
         customer.setCustomerNric(txtNric.getText());
-        customer.setCustomerNric(txtAddress.getText());
+        customer.setCustomerAddress(txtAddress.getText());
         customer.setCustomerPhone(txtPhone.getText());
         
         new UserProfileManager().editUser(customer);
         this.dispose();
         new ManageCustomerView().setVisible(true);
     }//GEN-LAST:event_btnConfirmActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new ManageCustomerView().setVisible(true);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,8 +192,8 @@ public class EditCustomerView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnConfirm;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class OrderManager {
     private static final String FILENAME = "order.txt";
-    private static final String FILEHEADER = "OrderId||CustomerId||OrderItems"
+    private static final String FILEHEADER = "OrderId||CustomerId||OrderItems" 
             + System.lineSeparator();
     
     

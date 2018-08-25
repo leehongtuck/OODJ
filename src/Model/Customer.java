@@ -14,13 +14,14 @@ public class Customer extends User {
         this.customerId = customerId;
         String row, fileCustId, fileCustName, fileNric, fileAddress, filePhone;
         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+            br.readLine();
             while ((row = br.readLine()) != null) {
-                String[] str = row.split("\\|\\|");
-                fileCustId = str[0];
-                fileCustName = str[1];
-                fileNric = str[2];
-                fileAddress = str[3];
-                filePhone = str[4];
+                String[] data = row.split("\\|\\|");
+                fileCustId = data[0];
+                fileCustName = data[1];
+                fileNric = data[2];
+                fileAddress = data[3];
+                filePhone = data[4];
                 
                 if (fileCustId.equals(customerId)) {
                     customerName = fileCustName;
@@ -34,16 +35,6 @@ public class Customer extends User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Customer(String userId, String username, String customerId, String customerName,
-            String customerNric, String customerAddress, String customerPhone){
-        super(userId, username);
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.customerNric = customerNric;
-        this.customerAddress = customerAddress;
-        this.customerPhone = customerPhone;
     }
     
     public Customer(String username, String customerName,

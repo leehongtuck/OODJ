@@ -53,6 +53,33 @@ public class ManageCustomerView extends javax.swing.JFrame {
         tblCustomer.setModel(model);
     }
     
+    private void loadTable(String search){
+        model = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        model.addColumn("Customer ID");
+        model.addColumn("Name");
+        model.addColumn("NRIC");
+        model.addColumn("Address");
+        model.addColumn("Phone");
+        
+        ArrayList<Customer> customers = new UserProfileLoader().loadCustomer(search);
+        
+        for(int i = 0; i < customers.size(); i++){
+            String customerId = customers.get(i).getCustomerId();
+            String name = customers.get(i).getCustomerName();
+            String nric = customers.get(i).getCustomerNric();
+            String address = customers.get(i).getCustomerAddress();
+            String phone = customers.get(i).getCustomerPhone();
+            Object[] data = {customerId, name, nric, address, phone};
+            model.addRow(data);
+        }
+        tblCustomer.setModel(model);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,8 +147,18 @@ public class ManageCustomerView extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblCustomer);
 
         btnAddCustomer.setText("Add Customer");
+        btnAddCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddCustomerActionPerformed(evt);
+            }
+        });
 
-        btnSearch.setText("Search ID");
+        btnSearch.setText("Search ID or Name");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -187,13 +224,13 @@ public class ManageCustomerView extends javax.swing.JFrame {
     private void btnEditCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditCustomerActionPerformed
         // TODO add your handling code here:
         if(tblCustomer.getSelectedRow() == -1){
-            JOptionPane.showMessageDialog(this, "Please select an customer to edit!");
+            JOptionPane.showMessageDialog(this, "Please select a customer to edit!");
             return;                
         }
         this.dispose();
         int rowSelect = tblCustomer.getSelectedRow();
         String customerId = (String)model.getValueAt(rowSelect, 0);
-        new EditCustomerView(new UserProfileLoader().loadCustomer(customerId)).setVisible(true);
+        new EditCustomerView(new UserProfileLoader().createCustomer(customerId)).setVisible(true);
     }//GEN-LAST:event_btnEditCustomerActionPerformed
 
     private void btnViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllActionPerformed
@@ -210,10 +247,22 @@ public class ManageCustomerView extends javax.swing.JFrame {
         
         int rowSelect = tblCustomer.getSelectedRow();
         String customerId = (String)model.getValueAt(rowSelect, 0);
-        new UserProfileManager().deleteUser(new UserProfileLoader().loadCustomer(customerId));
+        new UserProfileManager().deleteUser(new UserProfileLoader().createCustomer(customerId));
         
         loadTable();
     }//GEN-LAST:event_btnDeleteCustomerActionPerformed
+
+    private void btnAddCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCustomerActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new AddCustomerView().setVisible(true);
+    }//GEN-LAST:event_btnAddCustomerActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String search = txtSearch.getText();
+        loadTable(search);
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
      * @param args the command line arguments

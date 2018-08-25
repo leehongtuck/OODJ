@@ -44,7 +44,7 @@ public class OrderLoader {
                     orderItems.add(new OrderItem(product, Integer.parseInt(orderItemData[1])));
                     
                 }
-                Customer customer = new UserProfileLoader().loadCustomer(fileCustomerId);
+                Customer customer = new UserProfileLoader().createCustomer(fileCustomerId);
                 orderArrayList.add(new Order(fileOrderId, customer, orderItems));
             }
         } catch (FileNotFoundException ex) {

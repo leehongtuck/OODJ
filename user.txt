@@ -1,2 +1,4 @@
 UserID||Username||Password||PositionID
 U002||boss||123||M001
+U004||123||123||C002
+U005||tuckus||abcd||C003

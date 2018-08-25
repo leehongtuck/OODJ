@@ -27,13 +27,12 @@ public class OrderManager {
     }
 
     public void editOrder(Order order) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             String row;
             String fileData = "";
             br.readLine();
             while ((row = br.readLine())!= null){
-                String data[] = row.split("//|//|");
+                String data[] = row.split("\\|\\|");
                 String txtId = data[0];
                 if(order.getOrderId().equals(txtId)){
                     fileData += order.getOrderId() + "||" + order.getCustomer().getCustomerId() +
@@ -42,29 +41,32 @@ public class OrderManager {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
-
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))){
+                bw.write(FILEHEADER);
+                bw.write(fileData);
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteOrder(Order order) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             String row;
             String fileData = "";
             br.readLine();
             while ((row = br.readLine())!= null){
-                String data[] = row.split("//|//|");
+                String data[] = row.split("\\|\\|");
                 String txtId = data[0];
                 if(!(order.getOrderId().equals(txtId))){
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))){
+                bw.write(FILEHEADER);
+                bw.write(fileData);  
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

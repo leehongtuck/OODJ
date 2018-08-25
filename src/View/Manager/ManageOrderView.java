@@ -5,17 +5,89 @@
  */
 package View.Manager;
 
+import Model.Order;
+import Model.OrderItem;
+import Model.OrderLoader;
+import Model.OrderManager;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class ManageOrderView extends javax.swing.JFrame {
-
+    DefaultTableModel model;
     /**
      * Creates new form ManageOrderView
      */
     public ManageOrderView() {
         initComponents();
+        loadTable();
+    }
+    
+    private void loadTable(){
+     model = new DefaultTableModel(){
+         @Override
+         public boolean isCellEditable(int row, int column){
+             return false;
+         }
+     };
+     model.addColumn("Order ID");
+     model.addColumn("Customer ID");
+     model.addColumn("Customer Name");
+     model.addColumn("Ordered Items");
+
+     ArrayList<Order> orders = new OrderLoader().load();
+     for(int i = 0; i < orders.size(); i++){
+        String orderId = orders.get(i).getOrderId();
+        String customerId = orders.get(i).getCustomer().getCustomerId();
+        String customerName = orders.get(i).getCustomer().getCustomerName();
+        String orderItems = formatOrderItems(orders.get(i).getOrderItems());
+        Object[] data = {orderId, customerId, customerName, orderItems};
+        model.addRow(data);
+     }
+     tblOrder.setModel(model);
+    }
+    
+    private void loadTable(String search){
+     model = new DefaultTableModel(){
+         @Override
+         public boolean isCellEditable(int row, int column){
+             return false;
+         }
+     };
+     model.addColumn("Order ID");
+     model.addColumn("Customer ID");
+     model.addColumn("Customer Name");
+     model.addColumn("Ordered Items");
+
+     ArrayList<Order> orders = new OrderLoader().load(search);
+     for(int i = 0; i < orders.size(); i++){
+        String orderId = orders.get(i).getOrderId();
+        String customerId = orders.get(i).getCustomer().getCustomerId();
+        String customerName = orders.get(i).getCustomer().getCustomerName();
+        String orderItems = formatOrderItems(orders.get(i).getOrderItems());
+        Object[] data = {orderId, customerId, customerName, orderItems};
+        model.addRow(data);
+     }
+     tblOrder.setModel(model);
+    }
+    
+     private String formatOrderItems(ArrayList<OrderItem> o){
+        String items = "";
+        for (int i = 0; i < o.size(); i++) {
+            //add a comma if the records are not ending, no comma if is the last one
+            if (i != o.size() - 1) {
+                items += "(" + o.get(i).getProduct().getProductName() + ","
+                        + o.get(i).getQuantity() + "),  ";
+            } else {
+                items += "(" + o.get(i).getProduct().getProductName() + ","
+                        + o.get(i).getQuantity() + ")";
+            }
+        }
+        return items;
     }
 
     /**
@@ -27,35 +99,50 @@ public class ManageOrderView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnViewAll = new javax.swing.JButton();
+        btnEditOrder = new javax.swing.JButton();
+        btnDeleteOrder = new javax.swing.JButton();
+        btnMainMenu = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        tblOrder = new javax.swing.JTable();
+        btnAddOrder = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton3.setText("View All Orders");
-
-        jButton4.setText("Edit Order");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnViewAll.setText("View All Orders");
+        btnViewAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnViewAllActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Delete Product");
+        btnEditOrder.setText("Edit Order");
+        btnEditOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditOrderActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("Main Menu");
+        btnDeleteOrder.setText("Delete Order");
+        btnDeleteOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteOrderActionPerformed(evt);
+            }
+        });
+
+        btnMainMenu.setText("Main Menu");
+        btnMainMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMainMenuActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Manage Orders");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -72,13 +159,21 @@ public class ManageOrderView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblOrder);
 
-        jButton1.setText("Add Order");
+        btnAddOrder.setText("Add Order");
+        btnAddOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddOrderActionPerformed(evt);
+            }
+        });
 
-        jTextField1.setText("jTextField1");
-
-        jButton2.setText("Search");
+        btnSearch.setText("Search Order or Customer");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,17 +186,17 @@ public class ManageOrderView extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3)
+                                    .addComponent(btnViewAll)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnAddOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(33, 33, 33)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnEditOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(27, 27, 27)
-                                        .addComponent(jButton5))
+                                        .addComponent(btnDeleteOrder))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton2)))
+                                        .addComponent(btnSearch)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
@@ -114,7 +209,7 @@ public class ManageOrderView extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addGap(266, 266, 266))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton6)
+                                .addComponent(btnMainMenu)
                                 .addContainerGap())))))
         );
         layout.setVerticalGroup(
@@ -124,28 +219,75 @@ public class ManageOrderView extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch))
                 .addGap(13, 13, 13)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(btnViewAll)
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btnAddOrder)
+                    .addComponent(btnEditOrder)
+                    .addComponent(btnDeleteOrder))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
+                .addComponent(btnMainMenu)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnEditOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditOrderActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+        if(tblOrder.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an order to edit!");
+            return;                
+        }
+        
+        int rowSelect = tblOrder.getSelectedRow();
+        String orderId = (String)model.getValueAt(rowSelect, 0);
+        new EditOrderView(new OrderLoader().createOrder(orderId)).setVisible(true);
+        this.dispose();
+        
+    }//GEN-LAST:event_btnEditOrderActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String search = txtSearch.getText();
+        loadTable(search);
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnViewAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewAllActionPerformed
+        // TODO add your handling code here:
+        loadTable();
+    }//GEN-LAST:event_btnViewAllActionPerformed
+
+    private void btnDeleteOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOrderActionPerformed
+        // TODO add your handling code here:
+        if(tblOrder.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an order to remove!");
+            return;                
+        }
+        
+        int rowSelect = tblOrder.getSelectedRow();
+        String orderId = (String)model.getValueAt(rowSelect, 0);
+        new OrderManager().deleteOrder(new OrderLoader().createOrder(orderId));
+        
+        loadTable();
+    }//GEN-LAST:event_btnDeleteOrderActionPerformed
+
+    private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new MenuView().setVisible(true);   
+    }//GEN-LAST:event_btnMainMenuActionPerformed
+
+    private void btnAddOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOrderActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new AddOrderView().setVisible(true);
+    }//GEN-LAST:event_btnAddOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,15 +325,15 @@ public class ManageOrderView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton btnAddOrder;
+    private javax.swing.JButton btnDeleteOrder;
+    private javax.swing.JButton btnEditOrder;
+    private javax.swing.JButton btnMainMenu;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnViewAll;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblOrder;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

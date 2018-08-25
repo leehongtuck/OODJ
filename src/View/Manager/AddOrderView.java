@@ -5,19 +5,116 @@
  */
 package View.Manager;
 
+import Model.Customer;
+import Model.Inventory;
+import Model.Order;
+import Model.OrderItem;
+import Model.OrderManager;
+import Model.Product;
+import Model.ProductInventoryLoader;
+import Model.ProductInventoryManager;
+import Model.UserProfileLoader;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class AddOrderView extends javax.swing.JFrame {
-
+    Order order;
+    DefaultTableModel modelOrderItem, modelProduct;
+    DefaultComboBoxModel modelCombo = new DefaultComboBoxModel();
     /**
      * Creates new form AddOrderView
      */
     public AddOrderView() {
         initComponents();
+        loadComboBox();
+        loadProductTable();
+        loadOrderItemTable();
     }
+    
+    private void loadComboBox(){
+        ArrayList<Customer> customers = new UserProfileLoader().loadCustomer();
+        for(Customer c: customers){
+            modelCombo.addElement(c.getCustomerId());
+        }
+        comboCustomer.setModel(modelCombo);
+    }
+    
+    private void loadProductTable(){
+        modelProduct = new DefaultTableModel(){
+             @Override
+             public boolean isCellEditable(int row, int column){
+                return false;
+             }
+         };
 
+         ProductInventoryLoader p = new ProductInventoryLoader();
+         ArrayList<Inventory> inventoryArrayList = p.load();
+         modelProduct.addColumn("Product ID");
+         modelProduct.addColumn("Product");
+         modelProduct.addColumn("Price (RM)");
+         modelProduct.addColumn("Type");
+         modelProduct.addColumn("Stock"); 
+
+        for(int i = 0; i < inventoryArrayList.size(); i++){
+            String productId = inventoryArrayList.get(i).getProduct().getProductId();
+            String productName = inventoryArrayList.get(i).getProduct().getProductName();
+            String price = Double.toString(inventoryArrayList.get(i).getProduct().getPrice());
+            String type = "";
+            if(inventoryArrayList.get(i).getProduct().toString().equals("N")){
+                type = "Non-Fragile";
+            }else if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
+                type = "Fragile";
+            }
+            String stock = Integer.toString(inventoryArrayList.get(i).getQuantity());
+            Object[] data = {productId, productName, price, type, stock};
+            modelProduct.addRow(data);
+        }
+        tblProduct.setModel(modelProduct);
+    }
+    
+    private void loadOrderItemTable(){
+        modelOrderItem  = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        modelOrderItem.addColumn("Product ID");
+        modelOrderItem.addColumn("Product");
+        modelOrderItem.addColumn("Price Per Unit (RM)");
+        modelOrderItem.addColumn("Type");
+        modelOrderItem.addColumn("Quantity");
+        modelOrderItem.addColumn("Total Price (RM)");
+        
+        /*
+        ArrayList<OrderItem> orderItems = order.getOrderItems();
+        double grandTotal = 0;
+        for(int i = 0; i < orderItems.size(); i++){
+            String productId = orderItems.get(i).getProduct().getProductId();
+            String productName = orderItems.get(i).getProduct().getProductName();
+            Double price = orderItems.get(i).getProduct().getPrice();
+            String type = "";
+            if(orderItems.get(i).getProduct().toString().equals("N")){
+                type = "Non-Fragile";
+            }else if(orderItems.get(i).getProduct().toString().equals("F")){
+                type = "Fragile";
+            }
+            int quantity = orderItems.get(i).getQuantity();
+            Double totalPrice = price * quantity;
+            grandTotal += totalPrice;
+            Object[] data = {productId, productName, price, type, quantity, totalPrice};
+            modelOrderItem.addRow(data);
+        }
+        */
+        
+        tblOrderItem.setModel(modelOrderItem);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,17 +125,24 @@ public class AddOrderView extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProduct = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblOrderItem = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        comboCustomer = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        btnAdd = new javax.swing.JButton();
+        btnRemove = new javax.swing.JButton();
+        btnEditQuantity = new javax.swing.JButton();
+        btnAddOrder = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -55,11 +159,11 @@ public class AddOrderView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblProduct);
 
         jLabel1.setText("Add New Order");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblOrderItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -76,13 +180,50 @@ public class AddOrderView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tblOrderItem);
 
         jLabel2.setText("Available Products");
 
         jLabel3.setText("Items to Order");
 
-        jButton1.setText("Change Quantity");
+        comboCustomer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel4.setText("Customer:");
+
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnRemove.setText("Remove");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
+
+        btnEditQuantity.setText("Edit Quantity");
+        btnEditQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditQuantityActionPerformed(evt);
+            }
+        });
+
+        btnAddOrder.setText("Add Order");
+        btnAddOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddOrderActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,11 +231,6 @@ public class AddOrderView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -102,36 +238,249 @@ public class AddOrderView extends javax.swing.JFrame {
                                 .addComponent(jLabel1))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
+                                .addComponent(btnAdd)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(comboCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jSeparator1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnRemove)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnEditQuantity)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(464, 464, 464)
+                                .addComponent(btnAddOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(30, 30, 30)
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(16, 16, 16)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addComponent(btnAdd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(72, 72, 72))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRemove)
+                    .addComponent(btnEditQuantity)
+                    .addComponent(btnAddOrder))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCancel)
+                .addGap(6, 6, 6))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        if(tblProduct.getSelectedRow()== -1){
+            JOptionPane.showMessageDialog(this, "Please select a product!");
+            return;
+        }
+        String strQuantity = JOptionPane.showInputDialog(this, "Quantity:");
+        if(strQuantity != null){
+            int quantity;
+            try{
+                quantity = Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            }
+
+            //Get selected row's product data
+            int rowSelect = tblProduct.getSelectedRow();
+            String productId = (String)modelProduct.getValueAt(rowSelect, 0);
+            String productName = (String)modelProduct.getValueAt(rowSelect, 1);
+            String strPrice = (String)modelProduct.getValueAt(rowSelect,2);
+            double price = Double.parseDouble(strPrice);
+            String type = (String)modelProduct.getValueAt(rowSelect, 3);
+            System.out.println(modelProduct.getValueAt(rowSelect, 4));
+            String strStock = (String)modelProduct.getValueAt(rowSelect, 4);
+            int stock = Integer.parseInt(strStock);
+            
+            //Check stock amount
+            if(quantity > stock){
+                JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                return;
+            }
+
+            //Check if already exists in order items
+            for(int i = 0; i <tblOrderItem.getRowCount(); i++){
+                if(modelOrderItem.getValueAt(i, 0).equals(productId)){
+                    JOptionPane.showMessageDialog(this, "This item exists in the list of order items.");
+                    return;
+                }
+            }
+            String strTotalPrice = Double.toString(price * quantity);
+            Object[] rowData = {productId, productName, strPrice, type, strQuantity, strTotalPrice};
+            modelOrderItem.addRow(rowData);
+            modelProduct.setValueAt(Integer.toString(stock - quantity), rowSelect, 4);
+
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        // TODO add your handling code here:
+        if(tblOrderItem.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to remove!");
+            return;
+        }
+
+        int rowSelect = tblOrderItem.getSelectedRow();
+        String productId = (String)modelOrderItem.getValueAt(rowSelect, 0);
+        String strQuantity = (String)modelOrderItem.getValueAt(rowSelect, 4);
+        int quantity = Integer.parseInt(strQuantity);
+        
+        modelOrderItem.removeRow(rowSelect);
+
+        //add back quantity to product table
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                int stock = Integer.parseInt((String)modelProduct.getValueAt(i, 4));
+                modelProduct.setValueAt(Integer.toString(stock + quantity), i, 4);
+            }
+        }
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void btnEditQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQuantityActionPerformed
+        // TODO add your handling code here:
+        if(tblOrderItem.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to edit!");
+            return;
+        }
+
+        int rowSelect = tblOrderItem.getSelectedRow();
+        String productId = (String)modelOrderItem.getValueAt(rowSelect, 0);
+        String strCurrentQuantity = (String)modelOrderItem.getValueAt(rowSelect, 4);
+        int currentQuantity = Integer.parseInt(strCurrentQuantity);
+        String strPrice = (String)modelOrderItem.getValueAt(rowSelect, 2);
+        double price = Double.parseDouble(strPrice);
+
+        String strQuantity = JOptionPane.showInputDialog(this, "Change quantity to:");
+        int stock = 0;
+        int quantity = 0;
+
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                stock = Integer.parseInt((String)modelProduct.getValueAt(i, 4));
+                break;
+            }
+        }
+
+        if(strQuantity != null){
+            try{
+                quantity= Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }else if(quantity > stock + currentQuantity){
+                    JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                    return;
+                }
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            }
+        }
+
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                modelProduct.setValueAt(Integer.toString(stock + currentQuantity - quantity), i, 4);
+                break;
+            }
+        }
+        
+        modelOrderItem.setValueAt(strQuantity, rowSelect, 4);
+        modelOrderItem.setValueAt(Double.toString(quantity * price), rowSelect, 5);
+
+    }//GEN-LAST:event_btnEditQuantityActionPerformed
+
+    private void btnAddOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOrderActionPerformed
+        // TODO add your handling code here:
+        if(modelOrderItem.getRowCount()==0){
+            JOptionPane.showMessageDialog(this, "Please add an item to cart!");
+            return;
+        }
+        
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to place order?", "Confirm",
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        switch (dialogResult) {
+            case JOptionPane.YES_OPTION:
+                // Saving code here
+                ArrayList<OrderItem> orderItems = new ArrayList<>();
+                for(int i = 0; i < modelOrderItem.getRowCount(); i++){
+                    String productId = (String)modelOrderItem.getValueAt(i, 0);
+                    int quantity = Integer.parseInt((String)modelOrderItem.getValueAt(i,4));
+                    orderItems.add(
+                        new OrderItem(
+                            new ProductInventoryLoader().createProduct(productId),
+                            quantity
+                        )
+                    );
+                }
+                
+                Order order = new Order(
+                    new UserProfileLoader().createCustomer(comboCustomer.getSelectedItem().toString()),
+                    orderItems
+                );
+
+                new OrderManager().addOrder(order);
+                JOptionPane.showMessageDialog(this, "Order added!");
+                this.dispose();
+                new ManageOrderView().setVisible(true);
+                break;
+            case JOptionPane.NO_OPTION:
+                return;
+            case JOptionPane.CLOSED_OPTION:
+                return;
+            default:
+                break;
+        }
+
+    }//GEN-LAST:event_btnAddOrderActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new ManageOrderView().setVisible(true);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,13 +518,20 @@ public class AddOrderView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAddOrder;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnEditQuantity;
+    private javax.swing.JButton btnRemove;
+    private javax.swing.JComboBox<String> comboCustomer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable tblOrderItem;
+    private javax.swing.JTable tblProduct;
     // End of variables declaration//GEN-END:variables
 }

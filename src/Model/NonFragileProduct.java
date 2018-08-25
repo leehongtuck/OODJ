@@ -8,6 +8,12 @@ public class NonFragileProduct extends Product {
         this.price = price;
         this.charge = RATE;
     }
+    
+    public NonFragileProduct(String productName, double price) {
+        super(productName);
+        this.price = price;
+        this.charge = RATE;
+    }
 
     @Override
     Double getCharge() {

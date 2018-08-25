@@ -67,12 +67,12 @@ public class CartView extends javax.swing.JFrame {
                 btnEditQuantity.setEnabled(false);
                 btnCheckout.setEnabled(false);     
             }else{
-                 ArrayList<OrderItem> cartItems = cart.getCartItems();
-                 Double grandTotal = 0.0;
+                ArrayList<OrderItem> cartItems = cart.getCartItems();
+                double grandTotal = 0;
                 for(int i = 0; i < cartItems.size(); i++){
                     String productId = cartItems.get(i).getProduct().getProductId();
                     String productName = cartItems.get(i).getProduct().getProductName();
-                    Double price = cartItems.get(i).getProduct().getPrice();
+                    double price = cartItems.get(i).getProduct().getPrice();
                     String type = "";
                     if(cartItems.get(i).getProduct().toString().equals("N")){
                         type = "Non-Fragile";
@@ -80,7 +80,7 @@ public class CartView extends javax.swing.JFrame {
                         type = "Fragile";
                     }
                     int quantity = cartItems.get(i).getQuantity();
-                    Double totalPrice = price * quantity;
+                    double totalPrice = price * quantity;
                     grandTotal += totalPrice;
                     Object[] data = {productId, productName, price, type, quantity, totalPrice};
                     model.addRow(data);
@@ -254,28 +254,28 @@ public class CartView extends javax.swing.JFrame {
         // TODO add your handling code here:
         int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to confirm purchase?", "Confirm",
         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if(dialogResult == JOptionPane.YES_OPTION){
-          // Saving code here
-          if(customer != null){
-            Order o = new Order(customer, cart.getCartItems());
-            new OrderManager().addOrder(o);
-            cart.clearItems();
-            JOptionPane.showMessageDialog(this, "Purchase successful!");
-            this.dispose();
-            new MenuView(customer, cart).setVisible(true);
-          }else{
-              JOptionPane.showMessageDialog(this, "An error occured, please log in again.");
-              this.dispose();
-              new LoginView().setVisible(true);
-          }
-          
-          
-        }else if (dialogResult == JOptionPane.NO_OPTION) {
-            System.out.println("No button clicked");
-            return;
-        }else if (dialogResult == JOptionPane.CLOSED_OPTION) {
-            System.out.println("JOptionPane closed");
-            return;
+        switch (dialogResult) {
+            case JOptionPane.YES_OPTION:
+                // Saving code here
+                if(customer != null){
+                    Order o = new Order(customer, cart.getCartItems());
+                    new OrderManager().addOrder(o);
+                    cart.clearItems();
+                    JOptionPane.showMessageDialog(this, "Purchase successful!");
+                    this.dispose();
+                    new MenuView(customer, cart).setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(this, "An error occured, please log in again.");
+                    this.dispose();
+                    new LoginView().setVisible(true);
+                }     
+                break;
+            case JOptionPane.NO_OPTION:
+                return;
+            case JOptionPane.CLOSED_OPTION:
+                return;
+            default:
+                break;
         }
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
@@ -350,10 +350,8 @@ public class CartView extends javax.swing.JFrame {
             
             //edit the quantity in the cart arraylist
             for(int i = 0; i < cart.getCartItems().size(); i++){
-                OrderItem itemToEdit;
                 if(cart.getCartItems().get(i).getProduct().getProductId().equals(productId)){
-                    cart.getCartItems().get(i).setQuantity(quantity);
-                          
+                    cart.getCartItems().get(i).setQuantity(quantity);          
                 }
             }
             refreshTable();

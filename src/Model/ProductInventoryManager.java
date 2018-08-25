@@ -9,9 +9,9 @@ public class ProductInventoryManager {
     private static final String FILEHEADER = "ProductId||Name||Price||Type||Quantity" + System.lineSeparator();
 
     public void addProduct(Inventory i) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME, true))) {
             bw.write(i.getProduct().getProductId() + "||" + i.getProduct().getProductName() + "||" 
-                    + i.getProduct().getPrice() + "||" + i.getProduct().toString() + "||" + "0" + System.lineSeparator());
+                    + i.getProduct().getPrice() + "||" + i.getProduct().toString() + "||" + i.getQuantity() + System.lineSeparator());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -19,13 +19,12 @@ public class ProductInventoryManager {
     }
 
     public void editProduct(Inventory i) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             String row;
             String fileData = "";
-
+            br.readLine();
             while ((row = br.readLine()) != null) {
-                String[] data = row.split("//|//|");
+                String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 if (i.getProduct().getProductId().equals(txtId)) {
                     fileData += i.getProduct().getProductId() + "||" + i.getProduct().getProductName() + "||" 
@@ -34,27 +33,33 @@ public class ProductInventoryManager {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))){
+                bw.write(FILEHEADER);
+                bw.write(fileData); 
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteProduct(Inventory i) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME));
-             BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             String row;
             String fileData = "";
+            br.readLine();
             while ((row = br.readLine()) != null) {
-                String[] data = row.split("//|//|");
+                String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 if (!(i.getProduct().getProductId().equals(txtId))) {
                     fileData += row + System.lineSeparator();
                 }
             }
-            bw.write(FILEHEADER);
-            bw.write(fileData);
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(FILENAME))){
+                bw.write(FILEHEADER);
+                bw.write(fileData);
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +72,6 @@ public class ProductInventoryManager {
             
             br.readLine();
             while ((row = br.readLine()) != null) {
-                System.out.println(row);
                 String[] data = row.split("\\|\\|");
                 String txtId = data[0];
                 int txtStock = Integer.parseInt(data[4]);

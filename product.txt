@@ -1,2 +1,4 @@
 ProductId||Name||Price||Type||Quantity
-P001||Rice Cooker||23.5||F||0
+P001||Nescafed||5.0||F||12
+P002||Cup||8.0||N||12
+P003||Plate||15.3||F||11

@@ -3,30 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/OrderManager.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/User/LoginView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Customer/MenuView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Customer/OrderHistoryView.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/Model/OrderLoader.java</file>
-            <file>file:/C:/Users/ht-19/Documents/NetBeansProjects/OODJ/src/View/Admin/AddCustomerView.java</file>
-=======
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/Login.java</file>
->>>>>>> acb47893198f88d92d791fa37c1335e7708c65e4
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/UserProfileLoader.java</file>
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Admin/AddManagerView.java</file>
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Admin/ManageManagerView.java</file>
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/UserProfileManager.java</file>
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/Manager.java</file>
-<<<<<<< HEAD
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/CustomException/UserDuplicateException.java</file>
-=======
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Admin/EditCustomerView.java</file>
-            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/User.java</file>
->>>>>>> f29b965291108b9908abf45f096ba83fd149f596
->>>>>>> acb47893198f88d92d791fa37c1335e7708c65e4
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/ProductInventoryLoader.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/Model/ProductInventoryManager.java</file>
+            <file>file:/C:/Users/Lee%20Hong%20Tuck/Desktop/OODJ/src/View/Manager/AddProductView.java</file>
         </group>
     </open-files>
 </project-private>

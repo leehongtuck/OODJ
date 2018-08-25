@@ -5,12 +5,29 @@
  */
 package View.Manager;
 
+import Model.Cart;
+import Model.FragileProduct;
+import Model.Inventory;
+import Model.NonFragileProduct;
+import Model.Order;
+import Model.OrderItem;
+import Model.OrderManager;
+import Model.Product;
+import Model.ProductInventoryLoader;
+import Model.ProductInventoryManager;
+import View.Customer.CartView;
+import View.User.LoginView;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ht-19
  */
 public class EditOrderView extends javax.swing.JFrame {
-
+    Order order;
+    DefaultTableModel modelOrderItem, modelProduct;
     /**
      * Creates new form EditOrderView
      */
@@ -18,6 +35,80 @@ public class EditOrderView extends javax.swing.JFrame {
         initComponents();
     }
 
+    public EditOrderView(Order order){
+        this.order = order;
+        initComponents();
+        loadProductTable();
+        loadOrderItemTable();
+    }
+    
+    private void loadProductTable(){
+        modelProduct = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+                
+        ProductInventoryLoader p = new ProductInventoryLoader();
+        ArrayList<Inventory> inventoryArrayList = p.load();
+        modelProduct.addColumn("Product ID");
+        modelProduct.addColumn("Product");
+        modelProduct.addColumn("Price (RM)");
+        modelProduct.addColumn("Type");
+        modelProduct.addColumn("Stock"); 
+        
+        for(int i = 0; i < inventoryArrayList.size(); i++){
+            String productId = inventoryArrayList.get(i).getProduct().getProductId();
+            String productName = inventoryArrayList.get(i).getProduct().getProductName();
+            String price = Double.toString(inventoryArrayList.get(i).getProduct().getPrice());
+            String type = "";
+            if(inventoryArrayList.get(i).getProduct().toString().equals("N")){
+                type = "Non-Fragile";
+            }else if(inventoryArrayList.get(i).getProduct().toString().equals("F")){
+                type = "Fragile";
+            }
+            String quantity = Integer.toString(inventoryArrayList.get(i).getQuantity());
+            Object[] data = {productId, productName, price, type, quantity};
+            modelProduct.addRow(data);
+        }
+        tblProduct.setModel(modelProduct);
+    }
+    
+    private void loadOrderItemTable(){
+        modelOrderItem  = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column){
+               return false;
+            }
+        };
+        modelOrderItem.addColumn("Product ID");
+        modelOrderItem.addColumn("Product");
+        modelOrderItem.addColumn("Price Per Unit (RM)");
+        modelOrderItem.addColumn("Type");
+        modelOrderItem.addColumn("Quantity");
+        modelOrderItem.addColumn("Total Price (RM)");
+        
+        ArrayList<OrderItem> orderItems = order.getOrderItems();
+        double grandTotal = 0;
+        for(int i = 0; i < orderItems.size(); i++){
+            String productId = orderItems.get(i).getProduct().getProductId();
+            String productName = orderItems.get(i).getProduct().getProductName();
+            Double price = orderItems.get(i).getProduct().getPrice();
+            String type = "";
+            if(orderItems.get(i).getProduct().toString().equals("N")){
+                type = "Non-Fragile";
+            }else if(orderItems.get(i).getProduct().toString().equals("F")){
+                type = "Fragile";
+            }
+            int quantity = orderItems.get(i).getQuantity();
+            Double totalPrice = price * quantity;
+            grandTotal += totalPrice;
+            Object[] data = {productId, productName, price, type, quantity, totalPrice};
+            modelOrderItem.addRow(data);
+        }
+        tblOrderItem.setModel(modelOrderItem);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,20 +118,28 @@ public class EditOrderView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnAdd1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblOrderItem = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblProduct = new javax.swing.JTable();
+        btnConfirm = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnRemove = new javax.swing.JButton();
+        btnEditQuantity = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        btnAdd1.setText("Add");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Edit Order");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblOrderItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -57,15 +156,20 @@ public class EditOrderView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tblOrderItem);
 
         jLabel2.setText("Available Products");
 
         jLabel3.setText("Items to Order");
 
-        jButton1.setText("Change Quantity");
+        btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -82,7 +186,35 @@ public class EditOrderView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblProduct);
+
+        btnConfirm.setText("Confirm Changes");
+        btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+
+        btnRemove.setText("Remove");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
+
+        btnEditQuantity.setText("Edit Quantity");
+        btnEditQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditQuantityActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,21 +234,25 @@ public class EditOrderView extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnAdd)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnRemove)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEditQuantity)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnConfirm))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCancel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator1))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 495, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,16 +264,195 @@ public class EditOrderView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addGap(31, 31, 31)
+                .addComponent(btnAdd)
+                .addGap(15, 15, 15)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnConfirm)
+                    .addComponent(btnRemove)
+                    .addComponent(btnEditQuantity))
+                .addGap(18, 18, 18)
+                .addComponent(btnCancel)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new ManageOrderView().setVisible(true);
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        if(tblProduct.getSelectedRow()== -1){
+            JOptionPane.showMessageDialog(this, "Please select a product!");
+            return;
+        }
+        String strQuantity = JOptionPane.showInputDialog(this, "Quantity:");
+        if(strQuantity != null){
+            int quantity;
+            try{
+                quantity = Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            }
+            
+            //Get selected row's product data
+            int rowSelect = tblProduct.getSelectedRow();
+            System.out.println(rowSelect);
+            String productId = (String)modelProduct.getValueAt(rowSelect, 0);
+            
+            int stock = Integer.parseInt((String)modelProduct.getValueAt(rowSelect, 4));
+            
+            //Check stock amount
+            if(quantity > stock){
+                JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                return;
+            }
+            
+            //Check if already exists in order items
+            for(int i = 0; i <order.getOrderItems().size(); i++){
+                if(order.getOrderItems().get(i).getProduct().getProductId().equals(productId)){
+                    JOptionPane.showMessageDialog(this, "This item exists in the list of order items.");
+                    return;
+                }
+            }
+            Product p = new ProductInventoryLoader().createProduct(productId);
+            OrderItem o = new OrderItem(p, quantity);
+            order.getOrderItems().add(o);
+            modelProduct.setValueAt(Integer.toString(stock - quantity), rowSelect, 4);
+            
+            loadOrderItemTable();
+        }  
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        // TODO add your handling code here:
+        if(tblOrderItem.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to remove!");
+            return;                
+        }
+        
+        int rowSelect = tblOrderItem.getSelectedRow();
+        String productId = (String)modelOrderItem.getValueAt(rowSelect, 0);
+        int quantity = (int)modelOrderItem.getValueAt(rowSelect, 4);
+        
+        //remove from array list
+        for(int i = 0; i < order.getOrderItems().size(); i++){
+            if(order.getOrderItems().get(i).getProduct().getProductId().equals(productId)){
+                order.getOrderItems().remove(i);
+            }
+        }
+        
+        //add back quantity to product table
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                int stock = Integer.parseInt((String)modelProduct.getValueAt(i, 4));
+                modelProduct.setValueAt(Integer.toString(stock + quantity), i, 4);
+            }
+        }
+        loadOrderItemTable();
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void btnEditQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditQuantityActionPerformed
+        // TODO add your handling code here:
+        if(tblOrderItem.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(this, "Please select an item to edit!");
+            return;                
+        }
+        
+        int rowSelect = tblOrderItem.getSelectedRow();
+        String productId = (String)modelOrderItem.getValueAt(rowSelect, 0);
+        int currentQuantity = (int)modelOrderItem.getValueAt(rowSelect, 4);
+        
+        String strQuantity = JOptionPane.showInputDialog(this, "Change quantity to:");
+        int stock = 0;
+        int quantity = 0;
+        
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                stock = Integer.parseInt((String)modelProduct.getValueAt(i, 4));
+                break;
+            }
+        }
+        
+        if(strQuantity != null){
+           try{          
+                quantity= Integer.parseInt(strQuantity);
+                if(quantity <= 0){
+                    JOptionPane.showMessageDialog(this, "Please enter a valid quantity! (1 or more)");
+                    return;
+                }else if(quantity > stock + currentQuantity){
+                    JOptionPane.showMessageDialog(this, "The quantity exceeded available stock!");
+                    return;
+                }
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Please enter a number!");
+                return;
+            } 
+        }
+        
+        for(int i = 0; i < modelProduct.getRowCount(); i++){
+            if(modelProduct.getValueAt(i, 0).equals(productId)){
+                modelProduct.setValueAt(Integer.toString(stock + currentQuantity - quantity), i, 4);
+                break;
+            }
+        }
+        
+        for(int i = 0; i < order.getOrderItems().size(); i++){
+            if(order.getOrderItems().get(i).getProduct().getProductId().equals(productId)){
+                    order.getOrderItems().get(i).setQuantity(quantity);          
+                }
+        }
+        loadOrderItemTable();
+        
+    }//GEN-LAST:event_btnEditQuantityActionPerformed
+
+    private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+        // TODO add your handling code here:
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Do you want to confirm changes?", "Confirm",
+        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        switch (dialogResult) {
+            case JOptionPane.YES_OPTION:
+                // Saving code here
+                new OrderManager().editOrder(order);
+
+                for(int i = 0; i < modelProduct.getRowCount(); i++){
+                    String productId = (String)modelProduct.getValueAt(i, 0);
+                    int stock = Integer.parseInt((String)modelProduct.getValueAt(i,4));
+                    new ProductInventoryManager().editProduct(
+                        new Inventory(
+                                new ProductInventoryLoader().createProduct(productId),
+                                stock
+                        )
+                    );
+                }
+                JOptionPane.showMessageDialog(this, "Changes saved!");
+                this.dispose();
+                new ManageOrderView().setVisible(true);
+                break;
+            case JOptionPane.NO_OPTION:
+                return;
+            case JOptionPane.CLOSED_OPTION:
+                return;
+            default:
+                break;
+        }
+        
+    }//GEN-LAST:event_btnConfirmActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,13 +490,19 @@ public class EditOrderView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAdd1;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnConfirm;
+    private javax.swing.JButton btnEditQuantity;
+    private javax.swing.JButton btnRemove;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable tblOrderItem;
+    private javax.swing.JTable tblProduct;
     // End of variables declaration//GEN-END:variables
 }

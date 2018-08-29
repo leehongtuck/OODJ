@@ -92,7 +92,7 @@ public class ManageCustomerView extends javax.swing.JFrame {
         btnViewAll = new javax.swing.JButton();
         btnEditCustomer = new javax.swing.JButton();
         btnDeleteCustomer = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnMainMenu = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomer = new javax.swing.JTable();
@@ -123,7 +123,12 @@ public class ManageCustomerView extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setText("Main Menu");
+        btnMainMenu.setText("Main Menu");
+        btnMainMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMainMenuActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Manage Customer Accounts");
 
@@ -176,7 +181,7 @@ public class ManageCustomerView extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnEditCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(294, 294, 294))
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(btnMainMenu, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnViewAll)
@@ -214,7 +219,7 @@ public class ManageCustomerView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDeleteCustomer)
-                    .addComponent(jButton6))
+                    .addComponent(btnMainMenu))
                 .addContainerGap())
         );
 
@@ -264,6 +269,12 @@ public class ManageCustomerView extends javax.swing.JFrame {
         loadTable(search);
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new MenuView().setVisible(true);
+    }//GEN-LAST:event_btnMainMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -304,9 +315,9 @@ public class ManageCustomerView extends javax.swing.JFrame {
     private javax.swing.JButton btnAddCustomer;
     private javax.swing.JButton btnDeleteCustomer;
     private javax.swing.JButton btnEditCustomer;
+    private javax.swing.JButton btnMainMenu;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnViewAll;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblCustomer;

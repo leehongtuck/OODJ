@@ -53,6 +53,11 @@ public class MenuView extends javax.swing.JFrame {
         });
 
         btnManageCustomer.setText("Manage Customer Accounts");
+        btnManageCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageCustomerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,12 +75,12 @@ public class MenuView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(41, 41, 41)
-                .addComponent(btnManageManager)
-                .addGap(41, 41, 41)
-                .addComponent(btnManageCustomer)
-                .addGap(41, 41, 41)
-                .addComponent(btnLogout)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addComponent(btnManageManager, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(btnManageCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
@@ -83,6 +88,8 @@ public class MenuView extends javax.swing.JFrame {
 
     private void btnManageManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageManagerActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new ManageManagerView().setVisible(true);     
     }//GEN-LAST:event_btnManageManagerActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -90,6 +97,12 @@ public class MenuView extends javax.swing.JFrame {
         this.dispose();
         new LoginView().setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnManageCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCustomerActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new ManageCustomerView().setVisible(true);
+    }//GEN-LAST:event_btnManageCustomerActionPerformed
 
     /**
      * @param args the command line arguments

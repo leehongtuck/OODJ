@@ -5,6 +5,8 @@
  */
 package View.Manager;
 
+import View.User.LoginView;
+
 /**
  *
  * @author ht-19
@@ -30,11 +32,10 @@ public class MenuView extends javax.swing.JFrame {
         btnManageProduct = new javax.swing.JButton();
         btnManageOrder = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnManageProduct.setText("Manage Products");
+        btnManageProduct.setText("Manage Products & Inventory");
         btnManageProduct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManageProductActionPerformed(evt);
@@ -49,8 +50,11 @@ public class MenuView extends javax.swing.JFrame {
         });
 
         btnLogout.setText("Logout");
-
-        jButton1.setText("Manage Inventory");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -59,8 +63,7 @@ public class MenuView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(73, 73, 73)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnManageProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                    .addComponent(btnManageProduct, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                     .addComponent(btnManageOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(91, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -71,13 +74,11 @@ public class MenuView extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(83, Short.MAX_VALUE)
-                .addComponent(btnManageProduct)
-                .addGap(28, 28, 28)
-                .addComponent(jButton1)
-                .addGap(29, 29, 29)
-                .addComponent(btnManageOrder)
-                .addGap(47, 47, 47)
+                .addGap(58, 58, 58)
+                .addComponent(btnManageProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(btnManageOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addComponent(btnLogout)
                 .addContainerGap())
         );
@@ -87,11 +88,18 @@ public class MenuView extends javax.swing.JFrame {
 
     private void btnManageProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageProductActionPerformed
         // TODO add your handling code here:
+        new ManageProductView().setVisible(true);
     }//GEN-LAST:event_btnManageProductActionPerformed
 
     private void btnManageOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageOrderActionPerformed
         // TODO add your handling code here:
+        new ManageOrderView().setVisible(true);
     }//GEN-LAST:event_btnManageOrderActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+        new LoginView().setVisible(true);
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -132,6 +140,5 @@ public class MenuView extends javax.swing.JFrame {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnManageOrder;
     private javax.swing.JButton btnManageProduct;
-    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }
